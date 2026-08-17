@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
-import lion
+import zeon
 
 json_data = """
 {
@@ -29,13 +29,13 @@ json_data = """
 """
 
 try:
-    lion_text = lion.convert(json_data).to_lion()
-    print("=== LION GERADO COM SUCESSO ===")
-    print(lion_text)
+    zeon_text = zeon.convert(json_data).to_zeon()
+    print("=== ZEON GERADO COM SUCESSO ===")
+    print(zeon_text)
     print("===============================")
     
     print("\nVerificando Roundtrip...")
-    parsed_data = lion.loads(lion_text)
+    parsed_data = zeon.loads(zeon_text)
     import json
     print(json.dumps(parsed_data, indent=2))
 

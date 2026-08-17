@@ -1,16 +1,16 @@
 <div align="center">
-  <h1>LION</h1>
-  <p><strong>Lightweight LLM Object Notation</strong></p>
+  <h1>ZEON</h1>
+  <p><strong>Zero-overhead Encoding Object Notation</strong></p>
   <p>Uma linguagem de serialização tabular de nova geração, projetada para a máxima eficiência de LLMs.</p>
 </div>
 
-O LION é uma linguagem de serialização de dados sensível a espaços em branco que reimagina completamente como dados estruturados são apresentados a Modelos de Linguagem Grande (LLMs).
+O ZEON é uma linguagem de serialização de dados sensível a espaços em branco que reimagina completamente como dados estruturados são apresentados a Modelos de Linguagem Grande (LLMs).
 
-Fortemente inspirado pela estrutura visual limpa do Python e pela leveza do YAML, o LION elimina as partes mais "caras" do JSON: chaves repetitivas, colchetes, vírgulas e aspas. Ele introduz uma "Gramática Tabular Orientada a Sufixos" única, que atinge uma densidade extrema de tokens sem sacrificar a legibilidade humana ou a confiabilidade do parser.
+Fortemente inspirado pela estrutura visual limpa do Python e pela leveza do YAML, o ZEON elimina as partes mais "caras" do JSON: chaves repetitivas, colchetes, vírgulas e aspas. Ele introduz uma "Gramática Tabular Orientada a Sufixos" única, que atinge uma densidade extrema de tokens sem sacrificar a legibilidade humana ou a confiabilidade do parser.
 
 ## Índice
 - [O Problema dos Tokens](#o-problema-dos-tokens)
-- [A Solução LION](#a-solução-lion)
+- [A Solução ZEON](#a-solução-zeon)
 - [Guia de Sintaxe](#guia-de-sintaxe)
 - [Benchmarks de Desempenho](#benchmarks-de-desempenho)
 - [Uso da CLI](#uso-da-cli)
@@ -24,9 +24,9 @@ No desenvolvimento moderno de IA, alimentar o contexto dos LLMs com dados via pa
 
 Ao lidar com arrays de objetos (como uma lista de 1.000 produtos), o JSON te obriga a repetir as chaves `"id"`, `"nome"` e `"preco"` mil vezes. Cada chave repetida, dois-pontos e vírgula consome tokens preciosos, atrasando a geração do modelo e multiplicando seus custos de API.
 
-## A Solução LION
+## A Solução ZEON
 
-O LION resolve isso através da **Indentação Tabular**. Ao usar sufixos especiais (`[]` e `[][]`) diretamente nas chaves, você avisa ao parser exatamente como ler o bloco indentado abaixo dele. O cabeçalho é declarado apenas uma vez, e os dados fluem de forma limpa abaixo dele.
+O ZEON resolve isso através da **Indentação Tabular**. Ao usar sufixos especiais (`[]` e `[][]`) diretamente nas chaves, você avisa ao parser exatamente como ler o bloco indentado abaixo dele. O cabeçalho é declarado apenas uma vez, e os dados fluem de forma limpa abaixo dele.
 
 ### Comparação Prática
 
@@ -38,20 +38,20 @@ Payload em JSON:
 ]
 ```
 
-Equivalente em LION:
+Equivalente em ZEON:
 ```python
 items[]
   id qty price
   SKU-100 1 150.0
   SKU-205 2 45.5
 ```
-Ao declarar `items[]`, o LION entende que a primeira linha indentada é o cabeçalho e mapeia todas as linhas subsequentes para aquelas chaves.
+Ao declarar `items[]`, o ZEON entende que a primeira linha indentada é o cabeçalho e mapeia todas as linhas subsequentes para aquelas chaves.
 
 ---
 
 ## Guia de Sintaxe
 
-O LION usa espaços puros para separação e tipos primitivos similares aos do Python (`True`, `False`, `None`).
+O ZEON usa espaços puros para separação e tipos primitivos similares aos do Python (`True`, `False`, `None`).
 
 ### 1. Pares Chave-Valor Primitivos
 Atribuições padrão usam `=`. Strings sem aspas são suportadas nativamente para identificadores contínuos e datas ISO.
@@ -96,7 +96,7 @@ shipping_route[][]
 ```
 
 ### 6. Anotações Visuais (Ignoradas pelo Parser)
-O LION permite a inclusão de anotações focadas na legibilidade humana, que não afetam os dados finais em JSON.
+O ZEON permite a inclusão de anotações focadas na legibilidade humana, que não afetam os dados finais em JSON.
 - **Sufixos `()` e `[]` em colunas:** Marcam o tipo da coluna visualmente.
 - **Anotações Inline `[texto]`:** Descrevem a quem aquela chave pertence.
 
@@ -105,10 +105,10 @@ users[]
   id name preferences(theme) nicknames() aliases[]
   1 Maria (light) nicknames[Maria]=(1=M 2=Mah) [mary mah]
 ```
-O parser ignora completamente `()`, `[]` e `[Maria]`, resultando num JSON de chaves limpas. O Stringifier do LION já inclui `()` e `[]` automaticamente ao ser gerado!
+O parser ignora completamente `()`, `[]` e `[Maria]`, resultando num JSON de chaves limpas. O Stringifier do ZEON já inclui `()` e `[]` automaticamente ao ser gerado!
 
 ### 7. Dicionários e Listas Multilinhas
-Ao contrário do JSON que exige vírgulas para tudo, o LION permite uma formatação multilinha deslumbrante dentro de `(...)` (dicionários) e `[...]` (arrays), ignorando quebras de linha e indentações de forma nativa e elegante (idêntico ao Python).
+Ao contrário do JSON que exige vírgulas para tudo, o ZEON permite uma formatação multilinha deslumbrante dentro de `(...)` (dicionários) e `[...]` (arrays), ignorando quebras de linha e indentações de forma nativa e elegante (idêntico ao Python).
 
 ```python
 config
@@ -127,7 +127,7 @@ config
 ```
 
 ### 8. Fallback para Dados Mistos
-Se um array contiver tipos mistos, irregulares ou profundamente aninhados, um cabeçalho tabular não será adequado. Nesses casos, o LION volta graciosamente para um formato "inline" de segurança.
+Se um array contiver tipos mistos, irregulares ou profundamente aninhados, um cabeçalho tabular não será adequado. Nesses casos, o ZEON volta graciosamente para um formato "inline" de segurança.
 
 JSON:
 ```json
@@ -139,7 +139,7 @@ JSON:
 ]
 ```
 
-Equivalente em LION:
+Equivalente em ZEON:
 ```python
 mixed_data=[1 "hello" (flag=True) [2 3]]
 ```
@@ -149,11 +149,11 @@ Note como usamos colchetes `[]` para arrays soltos e parênteses `()` para objet
 
 ## Benchmarks de Desempenho
 
-O LION brilha de forma absoluta em estruturas de dados grandes e baseadas em listas. Nós rodamos nossa implementação oficial em Python contra respostas complexas de APIs de E-commerce do mundo real.
+O ZEON brilha de forma absoluta em estruturas de dados grandes e baseadas em listas. Nós rodamos nossa implementação oficial em Python contra respostas complexas de APIs de E-commerce do mundo real.
 
 **Resultados de Tokens (Usando o Tokenizador OpenAI TikToken):**
 
-| Conjunto de Dados (Larga Escala) | JSON Compacto | YAML | LION | Redução (vs JSON) |
+| Conjunto de Dados (Larga Escala) | JSON Compacto | YAML | ZEON | Redução (vs JSON) |
 | :--- | :--- | :--- | :--- | :--- |
 | Uniforme Plano | 12,246 | 15,742 | 9,493 | **-22.5%** |
 | Uniforme Aninhado Uniforme | 13,002 | 17,500 | 11,002 | **-15.4%** |
@@ -162,7 +162,7 @@ O LION brilha de forma absoluta em estruturas de dados grandes e baseadas em lis
 | Não-uniforme Plano | 1,555 | 1,600 | 1,466 | **-5.7%** |
 | Não-uniforme Aninhado Não-uniforme | 1,615 | 2,371 | 1,564 | **-3.2%** |
 
-*Em estruturas altamente uniformes e focadas em listas, o LION atinge até ~25% de redução de tokens em relação ao JSON puramente minificado e mais de ~40% em relação ao YAML.*
+*Em estruturas altamente uniformes e focadas em listas, o ZEON atinge até ~25% de redução de tokens em relação ao JSON puramente minificado e mais de ~40% em relação ao YAML.*
 
 Isso se traduz em liberar quase o dobro da capacidade de "Context Window" para as suas aplicações baseadas em LLM.
 
@@ -170,55 +170,55 @@ Isso se traduz em liberar quase o dobro da capacidade de "Context Window" para a
 
 ## Uso da CLI
 
-O LION vem com uma ferramenta de Linha de Comando (CLI) bidirecional para converter seus conjuntos de dados entre LION, JSON e YAML sem esforço.
+O ZEON vem com uma ferramenta de Linha de Comando (CLI) bidirecional para converter seus conjuntos de dados entre ZEON, JSON e YAML sem esforço.
 
 ```bash
-# Converter JSON ou YAML para LION
-lion convert data.json -o data.lion
-lion convert config.yaml -o config.lion
+# Converter JSON ou YAML para ZEON
+zeon convert data.json -o data.zeon
+zeon convert config.yaml -o config.zeon
 
-# Converter LION de volta para JSON ou YAML
-lion convert data.lion -o data.json
-lion convert config.lion -o config.yaml
+# Converter ZEON de volta para JSON ou YAML
+zeon convert data.zeon -o data.json
+zeon convert config.zeon -o config.yaml
 
 # Imprimir diretamente no terminal
-lion convert config.yaml --print
+zeon convert config.yaml --print
 ```
 
 ---
 
 ## Instalação
 
-O LION está oficialmente disponível no PyPI e pode ser instalado via `pip`:
+O ZEON está oficialmente disponível no PyPI e pode ser instalado via `pip`:
 
 ```bash
-pip install lion-format
+pip install zeon-format
 ```
 
 Para usá-lo em seu código Python:
 ```python
-import lion
+import zeon
 
-# Decodificar texto LION para um Dicionário Python
-data = lion.loads(text)
+# Decodificar texto ZEON para um Dicionário Python
+data = zeon.loads(text)
 
-# Codificar Dicionário Python para formato LION
-lion_text = lion.dumps(data)
+# Codificar Dicionário Python para formato ZEON
+zeon_text = zeon.dumps(data)
 
 # Conversão direta de strings
-json_text = lion.convert(lion_text).to_json()
-yaml_text = lion.convert(lion_text).to_yaml()
-lion_text = lion.convert(yaml_text).to_lion()
+json_text = zeon.convert(zeon_text).to_json()
+yaml_text = zeon.convert(zeon_text).to_yaml()
+zeon_text = zeon.convert(yaml_text).to_zeon()
 
 # Conversão direta de arquivos
 # 1. Passar apenas o nome do arquivo salvará automaticamente na mesma pasta do original
-lion.convert("pasta/secreta/dados.lion").to_json("dados.json")
-lion.convert("pasta/secreta/dados.lion").to_yaml("dados.yaml")
+zeon.convert("pasta/secreta/dados.zeon").to_json("dados.json")
+zeon.convert("pasta/secreta/dados.zeon").to_yaml("dados.yaml")
 
 # 2. Ou passe um caminho completo para salvar em outro local específico
-lion.convert("pasta/secreta/dados.lion").to_json("exports/meus_dados.json")
-lion.convert("pasta/secreta/dados.yaml").to_lion("exports/meus_dados.lion")
+zeon.convert("pasta/secreta/dados.zeon").to_json("exports/meus_dados.json")
+zeon.convert("pasta/secreta/dados.yaml").to_zeon("exports/meus_dados.zeon")
 ```
 
 ---
-*LION - O futuro da serialização de dados para IA.*
+*ZEON - O futuro da serialização de dados para IA.*

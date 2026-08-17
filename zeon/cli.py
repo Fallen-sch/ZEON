@@ -2,7 +2,7 @@ import argparse
 import sys
 import os
 import json
-import lion
+import zeon
 
 def convert(args):
     in_path = args.input
@@ -20,18 +20,18 @@ def convert(args):
             content = f.read()
             
         if ext == '.json':
-            # JSON to LION
+            # JSON to ZEON
             data = json.loads(content)
-            output = lion.dumps(data)
-            default_out_ext = '.lion'
+            output = zeon.dumps(data)
+            default_out_ext = '.zeon'
         elif ext in ('.yaml', '.yml'):
-            # YAML to LION
+            # YAML to ZEON
             import yaml
             data = yaml.safe_load(content)
-            output = lion.dumps(data)
-            default_out_ext = '.lion'
-        elif ext == '.lion':
-            data = lion.loads(content)
+            output = zeon.dumps(data)
+            default_out_ext = '.zeon'
+        elif ext == '.zeon':
+            data = zeon.loads(content)
             
             # Define o formato de saída baseado na extensão do out_path, ou default json
             out_ext = '.json'
@@ -48,7 +48,7 @@ def convert(args):
                 
             default_out_ext = out_ext
         else:
-            print(f"Error: Unsupported file extension '{ext}'. Use .json, .yaml, .yml or .lion")
+            print(f"Error: Unsupported file extension '{ext}'. Use .json, .yaml, .yml or .zeon")
             sys.exit(1)
             
         if args.print:
@@ -70,15 +70,15 @@ def convert(args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="LION (Lightweight LLM Object Notation) CLI",
-        prog="lion"
+        description="ZEON (Lightweight LLM Object Notation) CLI",
+        prog="zeon"
     )
     
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
     
     # Convert command
-    convert_parser = subparsers.add_parser("convert", help="Convert between JSON and LION formats")
-    convert_parser.add_argument("input", help="Input file path (.json or .lion)")
+    convert_parser = subparsers.add_parser("convert", help="Convert between JSON and ZEON formats")
+    convert_parser.add_argument("input", help="Input file path (.json or .zeon)")
     convert_parser.add_argument("--out", "-o", help="Output file path (optional)")
     convert_parser.add_argument("--print", "-p", action="store_true", help="Print output to console instead of saving to a file")
     

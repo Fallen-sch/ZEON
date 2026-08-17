@@ -20,7 +20,7 @@ class Converter:
 
     def to_json(self, out_path: str = None, **kwargs) -> str:
         """
-        Parses LION content and returns JSON string.
+        Parses ZEON content and returns JSON string.
         If out_path is provided, it saves to the file.
         """
         parsed_data = loads(self.content)
@@ -44,7 +44,7 @@ class Converter:
 
     def to_yaml(self, out_path: str = None, **kwargs) -> str:
         """
-        Parses LION content and returns YAML string.
+        Parses ZEON content and returns YAML string.
         If out_path is provided, it saves to the file.
         """
         import yaml
@@ -65,9 +65,9 @@ class Converter:
                 
         return result
 
-    def to_lion(self, out_path: str = None, **kwargs) -> str:
+    def to_zeon(self, out_path: str = None, **kwargs) -> str:
         """
-        Parses JSON or YAML content and returns LION string.
+        Parses JSON or YAML content and returns ZEON string.
         If out_path is provided, it saves to the file.
         """
         try:

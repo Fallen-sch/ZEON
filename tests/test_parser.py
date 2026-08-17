@@ -1,6 +1,6 @@
 import json
-from lion.stringify import dumps
-from lion.parse import loads
+from zeon.stringify import dumps
+from zeon.parse import loads
 
 def test_roundtrip():
     scenarios = {

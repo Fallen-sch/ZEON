@@ -6,9 +6,9 @@ import random
 import string
 import sys
 
-# Add parent dir to path so we can import lion
+# Add parent dir to path so we can import zeon
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from lion.stringify import dumps as lion_dumps
+from zeon.stringify import dumps as zeon_dumps
 
 enc = tiktoken.get_encoding("cl100k_base")
 
@@ -78,7 +78,7 @@ def generate_html_report(results):
         </style>
     </head>
     <body class="p-8">
-        <h1 class="text-3xl font-bold mb-6 text-center">LION Benchmark vs JSON & YAML</h1>
+        <h1 class="text-3xl font-bold mb-6 text-center">ZEON Benchmark vs JSON & YAML</h1>
         <div class="overflow-x-auto border border-gray-800 rounded-lg shadow-2xl">
             <table class="w-full text-sm text-left">
                 <thead class="bg-gray-900 border-b border-gray-800">
@@ -86,7 +86,7 @@ def generate_html_report(results):
                         <th class="p-4 text-gray-400 font-semibold">Dataset</th>
                         <th class="p-4 text-center text-gray-400 font-semibold">JSON Compact</th>
                         <th class="p-4 text-center text-gray-400 font-semibold">YAML</th>
-                        <th class="p-4 text-center text-blue-400 font-bold">LION</th>
+                        <th class="p-4 text-center text-blue-400 font-bold">ZEON</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,10 +95,10 @@ def generate_html_report(results):
     for r in results:
         j_tok = r['json_tok']
         y_tok = r['yaml_tok']
-        l_tok = r['lion_tok']
+        l_tok = r['zeon_tok']
         
-        lion_vs_json = (l_tok - j_tok) / j_tok * 100 if j_tok > 0 else 0
-        lion_vs_yaml = (l_tok - y_tok) / y_tok * 100 if y_tok > 0 else 0
+        zeon_vs_json = (l_tok - j_tok) / j_tok * 100 if j_tok > 0 else 0
+        zeon_vs_yaml = (l_tok - y_tok) / y_tok * 100 if y_tok > 0 else 0
         
         html += f'''
                 <tr class="border-b border-gray-800 hover:bg-gray-800/50">
@@ -117,8 +117,8 @@ def generate_html_report(results):
                     <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
                         <div class="font-mono font-bold text-xl text-blue-300">{l_tok}</div>
                         <div class="flex justify-center gap-2 mt-2">
-                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">{lion_vs_json:+.1f}% vs JSON</div>
-                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">{lion_vs_yaml:+.1f}% vs YAML</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">{zeon_vs_json:+.1f}% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">{zeon_vs_yaml:+.1f}% vs YAML</div>
                         </div>
                     </td>
                 </tr>
@@ -154,7 +154,7 @@ def run_benchmarks():
     
     results = []
     
-    print(f"{'Dataset':<40} | {'JSON':<8} | {'YAML':<8} | {'LION':<8} | {'% vs JSON':<10}")
+    print(f"{'Dataset':<40} | {'JSON':<8} | {'YAML':<8} | {'ZEON':<8} | {'% vs JSON':<10}")
     print("-" * 85)
     
     for size in sizes:
@@ -163,11 +163,11 @@ def run_benchmarks():
             
             json_str = json.dumps(data, separators=(',', ':'))
             yaml_str = yaml.dump(data, default_flow_style=False, sort_keys=False)
-            lion_str = lion_dumps(data)
+            zeon_str = zeon_dumps(data)
             
             j_tok = count_tokens(json_str)
             y_tok = count_tokens(yaml_str)
-            l_tok = count_tokens(lion_str)
+            l_tok = count_tokens(zeon_str)
             
             red_j = (l_tok - j_tok) / j_tok * 100 if j_tok > 0 else 0
             
@@ -178,7 +178,7 @@ def run_benchmarks():
                 'type': t_name,
                 'json_tok': j_tok,
                 'yaml_tok': y_tok,
-                'lion_tok': l_tok
+                'zeon_tok': l_tok
             })
             
     generate_html_report(results)
