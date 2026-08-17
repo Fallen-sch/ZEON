@@ -1,0 +1,68 @@
+import json
+import os
+from .parse import loads
+from .stringify import dumps
+
+class Converter:
+    def __init__(self, data_or_path: str):
+        self.raw_data = data_or_path
+        self.is_file = False
+        self.file_path = None
+        
+        # Check if the input is an existing file path
+        if isinstance(data_or_path, str) and len(data_or_path) < 1000 and os.path.exists(data_or_path):
+            self.is_file = True
+            self.file_path = data_or_path
+            with open(data_or_path, 'r', encoding='utf-8') as f:
+                self.content = f.read()
+        else:
+            self.content = data_or_path
+
+    def to_json(self, out_path: str = None, **kwargs) -> str:
+        """
+        Parses LION content and returns JSON string.
+        If out_path is provided, it saves to the file.
+        """
+        parsed_data = loads(self.content)
+        
+        if not kwargs and 'indent' not in kwargs:
+            result = json.dumps(parsed_data, separators=(',', ':'))
+        else:
+            result = json.dumps(parsed_data, **kwargs)
+            
+        if out_path:
+            # Se for apenas um nome de arquivo (sem barra de pasta) e a origem for um arquivo,
+            # salva na mesma pasta do arquivo original.
+            if self.is_file and not os.path.dirname(out_path):
+                original_dir = os.path.dirname(self.file_path)
+                out_path = os.path.join(original_dir, out_path)
+                
+            with open(out_path, 'w', encoding='utf-8') as f:
+                f.write(result)
+                
+        return result
+
+    def to_lion(self, out_path: str = None, **kwargs) -> str:
+        """
+        Parses JSON content and returns LION string.
+        If out_path is provided, it saves to the file.
+        """
+        parsed_data = json.loads(self.content)
+        result = dumps(parsed_data, **kwargs)
+        
+        if out_path:
+            if self.is_file and not os.path.dirname(out_path):
+                original_dir = os.path.dirname(self.file_path)
+                out_path = os.path.join(original_dir, out_path)
+                
+            with open(out_path, 'w', encoding='utf-8') as f:
+                f.write(result)
+                
+        return result
+
+def convert(data_or_path: str) -> Converter:
+    """
+    Starts a fluent conversion process. 
+    Accepts either a raw string or a file path.
+    """
+    return Converter(data_or_path)
