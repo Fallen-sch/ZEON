@@ -189,16 +189,10 @@ lion convert config.yaml --print
 
 ## Instalação
 
-Atualmente, a implementação de referência está disponível em Python.
-
-**Requisitos:**
-- Python 3.10+
-- Poetry
+O LION está oficialmente disponível no PyPI e pode ser instalado via `pip`:
 
 ```bash
-git clone https://github.com/your-org/lion.git
-cd lion
-poetry install
+pip install lion-format
 ```
 
 Para usá-lo em seu código Python:

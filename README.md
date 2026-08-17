@@ -189,16 +189,10 @@ lion convert data.yaml --print
 
 ## Installation
 
-Currently, the reference implementation is available in Python.
-
-**Requirements:**
-- Python 3.10+
-- Poetry
+LION is officially available on PyPI and can be installed via `pip`:
 
 ```bash
-git clone https://github.com/your-org/lion.git
-cd lion
-poetry install
+pip install lion-format
 ```
 
 To use it in your code:
