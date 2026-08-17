@@ -1,6 +1,6 @@
 [project]
 name = "zeon-format"
-version = "0.1.0"
+version = "0.2.0"
 description = "Zero-overhead Encoding Object Notation - A next-generation tabular serialization format designed for maximum LLM token efficiency."
 readme = "README.md"
 requires-python = ">=3.10"

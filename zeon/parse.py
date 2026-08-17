@@ -58,7 +58,7 @@ class Lexer:
             if c.isspace():
                 pos += 1
                 continue
-            if c in '()[]=':
+            if c in '()[]={}':
                 self.tokens.append(Token(c, c, self.line, start_col))
                 pos += 1
                 continue
@@ -71,7 +71,7 @@ class Lexer:
                 pos = end + 1
                 continue
                 
-            match = re.match(r'[^\s()\[\]=]+', line[pos:])
+            match = re.match(r'[^\s()\[\]={}]+', line[pos:])
             if match:
                 val = match.group(0)
                 if val in ('True', 'true'):
@@ -148,6 +148,7 @@ class Parser:
             self._skip_key_annotation()
             
             array_depth = 0
+            is_keyed_tabular = False
             while True:
                 if self.peek().type == '[':
                     if self.pos + 1 < len(self.tokens) and self.tokens[self.pos+1].type == ']':
@@ -156,12 +157,20 @@ class Parser:
                         array_depth += 1
                     else:
                         break
+                elif self.peek().type == '{':
+                    if self.pos + 1 < len(self.tokens) and self.tokens[self.pos+1].type == '}':
+                        self.consume('{')
+                        self.consume('}')
+                        is_keyed_tabular = True
+                        break
+                    else:
+                        break
                 else:
                     break
 
             if self.peek().type == 'NEWLINE':
                 if self.pos + 1 < len(self.tokens) and self.tokens[self.pos+1].type == 'INDENT':
-                    res[key] = self.parse_tabular_block(array_depth)
+                    res[key] = self.parse_tabular_block(array_depth, is_keyed_tabular)
                     continue
                 else:
                     if array_depth > 0:
@@ -182,7 +191,7 @@ class Parser:
                 
         return res
 
-    def parse_tabular_block(self, array_depth):
+    def parse_tabular_block(self, array_depth, is_keyed_tabular=False):
         self.consume('NEWLINE')
         self.consume('INDENT')
         
@@ -241,12 +250,20 @@ class Parser:
                 
         self.consume('NEWLINE')
         
-        res = []
+        res = {} if is_keyed_tabular else []
         while self.peek().type not in ('DEDENT', 'EOF'):
             self._skip_newlines()
             if self.peek().type == 'DEDENT':
                 break
             
+            dict_key = None
+            if is_keyed_tabular:
+                key_tok = self.peek()
+                if key_tok.type not in ('IDENTIFIER', 'NUMBER', 'STRING'):
+                    raise ValueError(f"Expected dict key for keyed tabular row, got {key_tok.type} at line {key_tok.line}")
+                self.consume()
+                dict_key = str(key_tok.value)
+                
             row_dict = {}
             for header in headers:
                 if isinstance(header, tuple):
@@ -274,9 +291,14 @@ class Parser:
                 else:
                     raise ValueError(f"Expected '=' after dynamic property '{key}' at line {key_tok.line}")
                     
-            res.append(row_dict)
+            if is_keyed_tabular:
+                res[dict_key] = row_dict
+            else:
+                res.append(row_dict)
             
         self.consume('DEDENT')
+        if is_keyed_tabular:
+            return res
         return res if array_depth > 0 else res[0]
 
     def parse_list(self):

@@ -1,0 +1,12 @@
+events[]
+  id type timestamp
+  1 login 2026-08-17T10:00:00Z ip=192.168.0.1 user=admin session_id=A1B2
+  2 purchase 2026-08-17T10:05:00Z amount=59.90 product_id=P-101 currency=USD discount_code=SUMMER26
+  3 error 2026-08-17T10:08:00Z code=500 message="Internal Server Error" stack_trace="Exception at line 42" retries=3
+  4 login 2026-08-17T10:10:00Z ip=192.168.0.5 user=guest
+  5 system_alert 2026-08-17T10:15:00Z cpu_usage=98.5 memory_usage=85.2 active_nodes=12
+  6 password_change 2026-08-17T10:20:00Z user=admin strength=strong forced=False
+  7 checkout_abandoned 2026-08-17T10:25:00Z user=guest cart_value=120.00 items=[P-101 P-102]
+  8 api_call 2026-08-17T10:30:00Z endpoint=/v1/users method=GET latency_ms=45.2 status=200
+  9 purchase 2026-08-17T10:35:00Z amount=1500.00 product_id=P-999 currency=BRL payment_method=(type=credit_card brand=visa)
+  10 logout 2026-08-17T10:40:00Z user=admin duration_minutes=40

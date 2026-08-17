@@ -52,7 +52,9 @@ output*.txt
 
 # root
 examples/
+example.md
 token.txt
+BENCHMARKS.md
 
 # Tests
 .pytest_cache/

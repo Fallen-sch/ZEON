@@ -126,8 +126,29 @@ config
   ]
 ```
 
-### 8. Fallback para Dados Mistos
-Se um array contiver tipos mistos, irregulares ou profundamente aninhados, um cabeçalho tabular não será adequado. Nesses casos, o ZEON volta graciosamente para um formato "inline" de segurança.
+### 8. Formato Híbrido (Tabular + Inline)
+Se um array contiver objetos semi-uniformes (ex: logs de evento em que apenas algumas linhas possuem propriedades extras), o ZEON encontra a interseção de chaves em comum para o cabeçalho e anexa as propriedades excedentes na mesma linha.
+
+```python
+event_logs[]
+  timestamp level message
+  2026-08-17T10:00:00Z INFO "User logged in" user_id=405
+  2026-08-17T10:01:00Z ERROR "DB Timeout" retry_count=3 context=(db=users)
+```
+Isso garante alta economia de tokens mesmo em dados sujos e despadronizados.
+
+### 9. Tabelas Chaveadas (Keyed Tabular)
+Ao lidar com dicionários de objetos uniformes (como feature flags ou configurações de ambientes), o ZEON usa o sufixo `{}`. O primeiro valor de cada linha torna-se a chave do dicionário, eliminando a repetição contínua das chaves aninhadas.
+
+```python
+environments{}
+  region replicas debug
+  production eu-central-1 6 False
+  staging eu-central-1 2 True
+```
+
+### 10. Fallback para Dados Mistos
+Se um array contiver tipos mistos, irregulares ou profundamente aninhados onde um cabeçalho não existe, o ZEON volta graciosamente para um formato "inline" de segurança.
 
 JSON:
 ```json
@@ -149,22 +170,28 @@ Note como usamos colchetes `[]` para arrays soltos e parênteses `()` para objet
 
 ## Benchmarks de Desempenho
 
-O ZEON brilha de forma absoluta em estruturas de dados grandes e baseadas em listas. Nós rodamos nossa implementação oficial em Python contra respostas complexas de APIs de E-commerce do mundo real.
+O ZEON brilha em estruturas de dados uniformes e baseadas em listas. Rodamos nossa implementacão Python oficial contra 8 formatos de datasets reais e representativos.
 
-**Resultados de Tokens (Usando o Tokenizador OpenAI TikToken):**
+**Resultados (Tokenizador: `cl100k_base` — GPT-4 / tiktoken):**
 
-| Conjunto de Dados (Larga Escala) | JSON Compacto | YAML | ZEON | Redução (vs JSON) |
-| :--- | :--- | :--- | :--- | :--- |
-| Uniforme Plano | 12,246 | 15,742 | 9,493 | **-22.5%** |
-| Uniforme Aninhado Uniforme | 13,002 | 17,500 | 11,002 | **-15.4%** |
-| Uniforme Aninhado Não-uniforme | 10,752 | 13,250 | 9,502 | **-11.6%** |
-| Não-uniforme Aninhado Uniforme | 4,033 | 6,034 | 3,036 | **-24.7%** |
-| Não-uniforme Plano | 1,555 | 1,600 | 1,466 | **-5.7%** |
-| Não-uniforme Aninhado Não-uniforme | 1,615 | 2,371 | 1,564 | **-3.2%** |
+| Conjunto de Dados | Elegibilidade Tabular | JSON Compacto | YAML | **ZEON** | vs JSON | vs YAML |
+| :--- | :---: | ---: | ---: | ---: | ---: | ---: |
+| Registros de Funcionários (100, uniforme) | 100% | 2.804 | 3.702 | **1.709** | `-39,1%` | `-53,8%` |
+| Repositórios GitHub (30, uniforme) | 100% | 2.083 | 2.461 | **1.188** | `-43,0%` | `-51,7%` |
+| Série Temporal Analítica (60, uniforme) | 100% | 2.332 | 2.870 | **1.498** | `-35,8%` | `-47,8%` |
+| Contatos com Endereço Aninhado (50) | 100% | 2.603 | 3.302 | **1.716** | `-34,1%` | `-48,0%` |
+| Pedidos E-commerce (50, aninhado) | 33% | 4.933 | 6.220 | **3.581** | `-27,4%` | `-42,4%` |
+| Feature Flags (40, mapa de chaves) | 100% | 825 | 963 | **487** | `-41,0%` | `-49,4%` |
+| Logs de Evento Semi-uniformes (75) | 50% | 2.944 | 3.617 | **2.303** | `-21,8%` | `-36,3%` |
+| Configuração Profundamente Aninhada | 0% | 137 | 173 | **105** | `-23,4%` | `-39,3%` |
+| **TOTAL (todos 8 datasets)** | — | **18.661** | **23.308** | **12.587** | **`-32,5%`** | **`-46,0%`** |
 
-*Em estruturas altamente uniformes e focadas em listas, o ZEON atinge até ~25% de redução de tokens em relação ao JSON puramente minificado e mais de ~40% em relação ao YAML.*
+> **Nota:** Para um comparativo detalhado e direto do ZEON contra o TOON e outros formatos orientados a IA, confira nosso arquivo [BENCHMARKS.md](BENCHMARKS.md).
 
-Isso se traduz em liberar quase o dobro da capacidade de "Context Window" para as suas aplicações baseadas em LLM.
+*Em dados altamente uniformes e baseados em listas (elegibilidade tabular 100%), o ZEON alcança até **-43%** de redução de tokens contra JSON minificado, e mais de **-53%** contra YAML.*
+*Mesmo em estruturas profundamente aninhadas ou semi-uniformes, o ZEON nunca consome **mais** tokens do que o YAML.*
+
+Isso se traduz em um contexto efetivo significativamente maior para suas aplicações LLM, reduzindo diretamente os custos de inference de API.
 
 ---
 
@@ -174,12 +201,12 @@ O ZEON vem com uma ferramenta de Linha de Comando (CLI) bidirecional para conver
 
 ```bash
 # Converter JSON ou YAML para ZEON
-zeon convert data.json -o data.zeon
-zeon convert config.yaml -o config.zeon
+zeon convert data.json -> data.zeon
+zeon convert config.yaml -> config.zeon
 
 # Converter ZEON de volta para JSON ou YAML
-zeon convert data.zeon -o data.json
-zeon convert config.zeon -o config.yaml
+zeon convert data.zeon -> data.json
+zeon convert config.zeon -> config.yaml
 
 # Imprimir diretamente no terminal
 zeon convert config.yaml --print

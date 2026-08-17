@@ -1,0 +1,4 @@
+users[]
+  id name preferences(theme notifications) nicknames() aliases[] matriz[]
+  1 Maria (light True) (1=Mariazinha 2=Marietti 3=(outro_dicionario=sim mesmo=True)) [mary mah] [[1 2] [3 4]]
+  2 Jose (dark False) (1=Ze 2=Zeca 3=(outro_dicionario=nao mesmo=False)) [zezinho zeh] [[5 6] [7 8]]

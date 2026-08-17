@@ -38,20 +38,40 @@ def _is_flat_enough_for_headers(v) -> bool:
             return False
     return True
 
-def _is_uniform_list_of_dicts(lst: list) -> bool:
+def _get_hybrid_headers(lst: list) -> list:
     if not lst or not isinstance(lst[0], dict):
-        return False
-    keys = set(lst[0].keys())
+        return []
+    common_keys = set(lst[0].keys())
     for item in lst[1:]:
-        if not isinstance(item, dict) or set(item.keys()) != keys:
-            return False
-        for k in keys:
+        if not isinstance(item, dict):
+            return []
+        common_keys.intersection_update(item.keys())
+    if not common_keys:
+        return []
+    headers = []
+    for k in lst[0].keys():
+        if k in common_keys:
             v1 = lst[0][k]
-            v2 = item[k]
             if isinstance(v1, dict) and _is_flat_enough_for_headers(v1):
-                if not isinstance(v2, dict) or set(v1.keys()) != set(v2.keys()):
-                    return False
-    return True
+                sub_keys = set(v1.keys())
+                valid = True
+                for item in lst[1:]:
+                    v2 = item[k]
+                    if not isinstance(v2, dict) or set(v2.keys()) != sub_keys:
+                        valid = False
+                        break
+                if valid:
+                    headers.append((k, list(v1.keys())))
+                else:
+                    headers.append(k)
+            else:
+                headers.append(k)
+    return headers
+
+def _get_keyed_tabular_headers(d: dict) -> list:
+    if not d or not isinstance(d, dict):
+        return []
+    return _get_hybrid_headers(list(d.values()))
 
 def _is_matrix_2d(lst: list) -> bool:
     if not lst or not isinstance(lst[0], list):
@@ -75,15 +95,6 @@ def _is_flat_dict(d: dict) -> bool:
                     return False
     return True
 
-def _get_tabular_headers(lst: list) -> list:
-    first = lst[0]
-    headers = []
-    for k, v in first.items():
-        if isinstance(v, dict) and _is_flat_enough_for_headers(v):
-            headers.append((k, list(v.keys())))
-        else:
-            headers.append(k)
-    return headers
 
 def _format_header_tuple(header) -> str:
     if isinstance(header, tuple):
@@ -130,8 +141,9 @@ def _dumps(obj, indent_level=0) -> str:
     indent_str = "  " * indent_level
     
     if isinstance(obj, dict):
-        has_tabular = any(isinstance(v, list) and (_is_uniform_list_of_dicts(v) or _is_matrix_2d(v)) for v in obj.values())
-        if not has_tabular and indent_level > 0:
+        has_tabular = any(isinstance(v, list) and (len(_get_hybrid_headers(v)) > 0 or _is_matrix_2d(v)) for v in obj.values())
+        has_keyed_tabular = any(isinstance(v, dict) and len(_get_keyed_tabular_headers(v)) > 0 for v in obj.values())
+        if not has_tabular and not has_keyed_tabular and indent_level > 0:
             return indent_str + "(" + _dumps_inline(obj) + ")"
             
         lines = []
@@ -141,8 +153,8 @@ def _dumps(obj, indent_level=0) -> str:
                 for row in v:
                     vals_str = " ".join([_dump_primitive(x) for x in row])
                     lines.append(f"{indent_str}  {vals_str}")
-            elif isinstance(v, list) and _is_uniform_list_of_dicts(v):
-                headers = _get_tabular_headers(v)
+            elif isinstance(v, list) and len(_get_hybrid_headers(v)) > 0:
+                headers = _get_hybrid_headers(v)
                 
                 header_strs = []
                 for h in headers:
@@ -163,10 +175,43 @@ def _dumps(obj, indent_level=0) -> str:
                 lines.append(f"{indent_str}  {header_str}")
                 for item in v:
                     vals_str = " ".join([_format_value_for_header(item, h) for h in headers])
+                    
+                    header_keys_set = set(h[0] if isinstance(h, tuple) else h for h in headers)
+                    extra_keys = [ek for ek in item.keys() if ek not in header_keys_set]
+                    if extra_keys:
+                        extra_dict = {ek: item[ek] for ek in extra_keys}
+                        vals_str += f" {_dumps_inline(extra_dict)}"
+                        
                     lines.append(f"{indent_str}  {vals_str}")
             elif isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict):
                 parts = [f"({_dumps_inline(item)})" for item in v]
                 lines.append(f"{indent_str}{k}=[\n{indent_str}  " + f"\n{indent_str}  ".join(parts) + f"\n{indent_str}]")
+            elif isinstance(v, dict) and len(_get_keyed_tabular_headers(v)) > 0:
+                headers = _get_keyed_tabular_headers(v)
+                header_strs = []
+                for h in headers:
+                    if isinstance(h, tuple):
+                        header_strs.append(_format_header_tuple(h))
+                    else:
+                        first_val = list(v.values())[0].get(h)
+                        if isinstance(first_val, dict):
+                            header_strs.append(f"{h}()")
+                        elif isinstance(first_val, list):
+                            header_strs.append(f"{h}[]")
+                        else:
+                            header_strs.append(str(h))
+                header_str = " ".join(header_strs)
+                
+                lines.append(f"{indent_str}{k}{{}}")
+                lines.append(f"{indent_str}  {header_str}")
+                for dict_key, item in v.items():
+                    vals_str = f"{_dump_primitive(dict_key)} " + " ".join([_format_value_for_header(item, h) for h in headers])
+                    header_keys_set = set(h[0] if isinstance(h, tuple) else h for h in headers)
+                    extra_keys = [ek for ek in item.keys() if ek not in header_keys_set]
+                    if extra_keys:
+                        extra_dict = {ek: item[ek] for ek in extra_keys}
+                        vals_str += f" {_dumps_inline(extra_dict)}"
+                    lines.append(f"{indent_str}  {vals_str}")
             elif isinstance(v, dict):
                 if _is_flat_dict(v):
                     headers = list(v.keys())

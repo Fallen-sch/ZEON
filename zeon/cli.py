@@ -79,12 +79,20 @@ def main():
     # Convert command
     convert_parser = subparsers.add_parser("convert", help="Convert between JSON and ZEON formats")
     convert_parser.add_argument("input", help="Input file path (.json or .zeon)")
+    convert_parser.add_argument("extra_args", nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
     convert_parser.add_argument("--out", "-o", help="Output file path (optional)")
     convert_parser.add_argument("--print", "-p", action="store_true", help="Print output to console instead of saving to a file")
     
     args = parser.parse_args()
     
     if args.command == "convert":
+        # Parse intuitive syntax like `-> out.zeon` or just `out.zeon`
+        if hasattr(args, 'extra_args') and args.extra_args:
+            if args.extra_args[0] == "->":
+                if len(args.extra_args) > 1:
+                    args.out = args.extra_args[1]
+            elif not args.out and len(args.extra_args) == 1:
+                args.out = args.extra_args[0]
         convert(args)
     else:
         parser.print_help()
