@@ -95,7 +95,38 @@ shipping_route[][]
   -23.5501 -46.6341
 ```
 
-### 6. Fallback para Dados Mistos
+### 6. Anotações Visuais (Ignoradas pelo Parser)
+O LION permite a inclusão de anotações focadas na legibilidade humana, que não afetam os dados finais em JSON.
+- **Sufixos `()` e `[]` em colunas:** Marcam o tipo da coluna visualmente.
+- **Anotações Inline `[texto]`:** Descrevem a quem aquela chave pertence.
+
+```python
+users[]
+  id name preferences(theme) nicknames() aliases[]
+  1 Maria (light) nicknames[Maria]=(1=M 2=Mah) [mary mah]
+```
+O parser ignora completamente `()`, `[]` e `[Maria]`, resultando num JSON de chaves limpas. O Stringifier do LION já inclui `()` e `[]` automaticamente ao ser gerado!
+
+### 7. Dicionários e Listas Multilinhas
+Ao contrário do JSON que exige vírgulas para tudo, o LION permite uma formatação multilinha deslumbrante dentro de `(...)` (dicionários) e `[...]` (arrays), ignorando quebras de linha e indentações de forma nativa e elegante (idêntico ao Python).
+
+```python
+config
+  db_pool (
+    host=localhost
+    port=5432
+    options=(
+      ssl=True
+      timeout=30
+    )
+  )
+  nodes [
+    192.168.0.1
+    192.168.0.2
+  ]
+```
+
+### 8. Fallback para Dados Mistos
 Se um array contiver tipos mistos, irregulares ou profundamente aninhados, um cabeçalho tabular não será adequado. Nesses casos, o LION volta graciosamente para um formato "inline" de segurança.
 
 JSON:
@@ -131,7 +162,6 @@ O LION brilha de forma absoluta em estruturas de dados grandes e baseadas em lis
 | Não-uniforme Plano | 1,555 | 1,600 | 1,466 | **-5.7%** |
 | Não-uniforme Aninhado Não-uniforme | 1,615 | 2,371 | 1,564 | **-3.2%** |
 
-
 *Em estruturas altamente uniformes e focadas em listas, o LION atinge até ~25% de redução de tokens em relação ao JSON puramente minificado e mais de ~40% em relação ao YAML.*
 
 Isso se traduz em liberar quase o dobro da capacidade de "Context Window" para as suas aplicações baseadas em LLM.
@@ -140,17 +170,19 @@ Isso se traduz em liberar quase o dobro da capacidade de "Context Window" para a
 
 ## Uso da CLI
 
-O LION vem com uma ferramenta de Linha de Comando (CLI) bidirecional para converter seus conjuntos de dados JSON <-> LION.
+O LION vem com uma ferramenta de Linha de Comando (CLI) bidirecional para converter seus conjuntos de dados entre LION, JSON e YAML sem esforço.
 
 ```bash
-# Converter JSON para LION
+# Converter JSON ou YAML para LION
 lion convert data.json -o data.lion
+lion convert config.yaml -o config.lion
 
-# Converter LION de volta para JSON
+# Converter LION de volta para JSON ou YAML
 lion convert data.lion -o data.json
+lion convert config.lion -o config.yaml
 
 # Imprimir diretamente no terminal
-lion convert data.json --print
+lion convert config.yaml --print
 ```
 
 ---

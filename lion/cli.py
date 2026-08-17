@@ -24,13 +24,31 @@ def convert(args):
             data = json.loads(content)
             output = lion.dumps(data)
             default_out_ext = '.lion'
+        elif ext in ('.yaml', '.yml'):
+            # YAML to LION
+            import yaml
+            data = yaml.safe_load(content)
+            output = lion.dumps(data)
+            default_out_ext = '.lion'
         elif ext == '.lion':
-            # LION to JSON
             data = lion.loads(content)
-            output = json.dumps(data, indent=2)
-            default_out_ext = '.json'
+            
+            # Define o formato de saída baseado na extensão do out_path, ou default json
+            out_ext = '.json'
+            if out_path:
+                _, actual_ext = os.path.splitext(out_path)
+                if actual_ext.lower() in ('.yaml', '.yml'):
+                    out_ext = actual_ext.lower()
+                    
+            if out_ext in ('.yaml', '.yml'):
+                import yaml
+                output = yaml.safe_dump(data, sort_keys=False)
+            else:
+                output = json.dumps(data, indent=2)
+                
+            default_out_ext = out_ext
         else:
-            print(f"Error: Unsupported file extension '{ext}'. Use .json or .lion")
+            print(f"Error: Unsupported file extension '{ext}'. Use .json, .yaml, .yml or .lion")
             sys.exit(1)
             
         if args.print:

@@ -30,6 +30,14 @@ def _dump_primitive(val) -> str:
     else:
         return f'"{str(val)}"'
 
+def _is_flat_enough_for_headers(v) -> bool:
+    if not isinstance(v, dict):
+        return True
+    for val in v.values():
+        if isinstance(val, (dict, list)):
+            return False
+    return True
+
 def _is_uniform_list_of_dicts(lst: list) -> bool:
     if not lst or not isinstance(lst[0], dict):
         return False
@@ -40,7 +48,7 @@ def _is_uniform_list_of_dicts(lst: list) -> bool:
         for k in keys:
             v1 = lst[0][k]
             v2 = item[k]
-            if isinstance(v1, dict):
+            if isinstance(v1, dict) and _is_flat_enough_for_headers(v1):
                 if not isinstance(v2, dict) or set(v1.keys()) != set(v2.keys()):
                     return False
     return True
@@ -71,7 +79,7 @@ def _get_tabular_headers(lst: list) -> list:
     first = lst[0]
     headers = []
     for k, v in first.items():
-        if isinstance(v, dict):
+        if isinstance(v, dict) and _is_flat_enough_for_headers(v):
             headers.append((k, list(v.keys())))
         else:
             headers.append(k)
@@ -85,13 +93,15 @@ def _format_header_tuple(header) -> str:
 def _format_value_for_header(item, header) -> str:
     if isinstance(header, tuple):
         main_k, sub_k = header
-        val_dict = item[main_k]
+        val_dict = item.get(main_k, {})
         vals = [_dump_primitive(val_dict.get(sk)) for sk in sub_k]
         return f"({' '.join(vals)})"
     else:
-        v = item[header]
-        if isinstance(v, list):
-            return "[" + " ".join([_dump_primitive(x) for x in v]) + "]"
+        v = item.get(header)
+        if isinstance(v, dict):
+            return f"({_dumps_inline(v)})"
+        elif isinstance(v, list):
+            return _dumps_inline(v)
         return _dump_primitive(v)
 
 def _dumps_inline(obj) -> str:
@@ -133,7 +143,22 @@ def _dumps(obj, indent_level=0) -> str:
                     lines.append(f"{indent_str}  {vals_str}")
             elif isinstance(v, list) and _is_uniform_list_of_dicts(v):
                 headers = _get_tabular_headers(v)
-                header_str = " ".join([_format_header_tuple(h) for h in headers])
+                
+                header_strs = []
+                for h in headers:
+                    if isinstance(h, tuple):
+                        header_strs.append(_format_header_tuple(h))
+                    else:
+                        first_val = v[0].get(h)
+                        if isinstance(first_val, dict):
+                            header_strs.append(f"{h}()")
+                        elif isinstance(first_val, list):
+                            header_strs.append(f"{h}[]")
+                        else:
+                            header_strs.append(str(h))
+                            
+                header_str = " ".join(header_strs)
+                
                 lines.append(f"{indent_str}{k}[]")
                 lines.append(f"{indent_str}  {header_str}")
                 for item in v:
@@ -159,7 +184,7 @@ def _dumps(obj, indent_level=0) -> str:
         return "\n".join(lines)
         
     elif isinstance(obj, list):
-        return indent_str + "[" + _dumps_inline(obj) + "]"
+        return indent_str + _dumps_inline(obj)
     else:
         return indent_str + _dump_primitive(obj)
 

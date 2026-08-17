@@ -95,7 +95,38 @@ shipping_route[][]
   -23.5501 -46.6341
 ```
 
-### 6. Mixed Data Fallback
+### 6. Visual Annotations (Ignored by Parser)
+LION allows human-friendly annotations to enhance readability without affecting the actual parsed JSON data.
+- **Suffixes `()` and `[]` on columns:** Mark complex columns explicitly.
+- **Inline Annotations `[text]`:** Describe what a key belongs to.
+
+```python
+users[]
+  id name preferences(theme) nicknames() aliases[]
+  1 Maria (light) nicknames[Maria]=(1=M 2=Mah) [mary mah]
+```
+The parser completely ignores `()`, `[]` and `[Maria]`, resulting in pristine JSON keys. The LION stringifier automatically generates `()` and `[]` for deep objects and arrays.
+
+### 7. Multiline Objects and Arrays
+Unlike JSON which requires commas, LION allows beautiful multiline formatting inside `(...)` (dictionaries) and `[...]` (arrays) while natively ignoring indentation and line breaks, exactly like Python.
+
+```python
+config
+  db_pool (
+    host=localhost
+    port=5432
+    options=(
+      ssl=True
+      timeout=30
+    )
+  )
+  nodes [
+    192.168.0.1
+    192.168.0.2
+  ]
+```
+
+### 8. Mixed Data Fallback
 If an array contains irregular or heavily nested mixed types, a tabular header won't fit. In these cases, LION gracefully falls back to an "inline" format.
 
 JSON:
@@ -112,7 +143,7 @@ LION Equivalent:
 ```python
 mixed_data=[1 "hello" (flag=True) [2 3]]
 ```
-Notice how `[]` brackets are used for arrays and `()` for nested objects (`flag=True`). This allows you to represent any deeply nested chaos securely on a single line, retaining the exact structure of JSON while stripping away commas and quotes.
+Notice how `[]` brackets are used for arrays and `()` for nested objects (`flag=True`). This allows you to represent any deeply nested chaos securely, retaining the exact structure of JSON while stripping away commas and quotes.
 
 ---
 
@@ -131,7 +162,6 @@ LION excels in large, list-heavy data structures. We ran our official Python imp
 | Non-uniform Flat | 1,555 | 1,600 | 1,466 | **-5.7%** |
 | Non-uniform Nested Non-uniform | 1,615 | 2,371 | 1,564 | **-3.2%** |
 
-
 *In highly uniform, list-heavy structures, LION achieves up to ~25% token reduction against purely minified JSON, and over ~40% against YAML.*
 
 This translates to nearly double the context window capacity for your LLM applications.
@@ -140,17 +170,19 @@ This translates to nearly double the context window capacity for your LLM applic
 
 ## CLI Usage
 
-LION ships with a powerful bidirectional CLI tool to convert your existing JSON datasets into LION format.
+LION ships with a powerful bidirectional CLI tool to convert your existing datasets between LION, JSON and YAML formats.
 
 ```bash
-# Convert JSON to LION
+# Convert JSON or YAML to LION
 lion convert data.json -o data.lion
+lion convert config.yaml -o config.lion
 
-# Convert LION back to JSON
+# Convert LION back to JSON or YAML
 lion convert data.lion -o data.json
+lion convert config.lion -o config.yaml
 
 # Print to stdout
-lion convert data.json --print
+lion convert data.yaml --print
 ```
 
 ---
