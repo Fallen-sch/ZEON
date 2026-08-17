@@ -1,0 +1,424 @@
+
+    <html>
+    <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <style>
+            body { background-color: #111; color: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+        </style>
+    </head>
+    <body class="p-8">
+        <h1 class="text-3xl font-bold mb-6 text-center">LION Benchmark vs JSON & YAML</h1>
+        <div class="overflow-x-auto border border-gray-800 rounded-lg shadow-2xl">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-900 border-b border-gray-800">
+                    <tr>
+                        <th class="p-4 text-gray-400 font-semibold">Dataset</th>
+                        <th class="p-4 text-center text-gray-400 font-semibold">JSON Compact</th>
+                        <th class="p-4 text-center text-gray-400 font-semibold">YAML</th>
+                        <th class="p-4 text-center text-blue-400 font-bold">LION</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Small</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-flat</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">122</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">155</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">96</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-21.3% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-38.1% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Small</div>
+                        <div class="text-xs text-gray-500 mt-1">non-uniform-flat</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">84</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">85</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">76</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-9.5% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-10.6% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Small</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-nested-uniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">132</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">175</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">112</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-15.2% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-36.0% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Small</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-nested-nonuniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">114</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">138</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">100</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-12.3% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-27.5% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Small</div>
+                        <div class="text-xs text-gray-500 mt-1">nonuniform-nested-nonuniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">94</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">134</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">89</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-5.3% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-33.6% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Small</div>
+                        <div class="text-xs text-gray-500 mt-1">nonuniform-nested-uniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">73</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">94</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">66</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-9.6% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-29.8% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Medium</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-flat</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">1217</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">1569</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">949</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-22.0% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-39.5% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Medium</div>
+                        <div class="text-xs text-gray-500 mt-1">non-uniform-flat</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">317</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">326</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">299</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-5.7% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-8.3% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Medium</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-nested-uniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">1302</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">1750</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">1102</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-15.4% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-37.0% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Medium</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-nested-nonuniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">1077</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">1325</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">952</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-11.6% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-28.2% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Medium</div>
+                        <div class="text-xs text-gray-500 mt-1">nonuniform-nested-nonuniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">335</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">491</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">324</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-3.3% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-34.0% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Medium</div>
+                        <div class="text-xs text-gray-500 mt-1">nonuniform-nested-uniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">433</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">634</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">336</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-22.4% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-47.0% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Large</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-flat</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">12246</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">15742</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">9493</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-22.5% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-39.7% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Large</div>
+                        <div class="text-xs text-gray-500 mt-1">non-uniform-flat</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">1555</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">1600</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">1466</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-5.7% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-8.4% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Large</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-nested-uniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">13002</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">17500</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">11002</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-15.4% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-37.1% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Large</div>
+                        <div class="text-xs text-gray-500 mt-1">uniform-nested-nonuniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">10752</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">13250</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">9502</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-11.6% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-28.3% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Large</div>
+                        <div class="text-xs text-gray-500 mt-1">nonuniform-nested-nonuniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">1615</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">2371</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">1564</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-3.2% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-34.0% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                <tr class="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td class="p-4">
+                        <div class="font-bold text-white text-base">Large</div>
+                        <div class="text-xs text-gray-500 mt-1">nonuniform-nested-uniform</div>
+                    </td>
+                    <td class="p-4 text-center">
+                        <div class="font-mono text-lg">4033</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center border-l border-gray-800/50">
+                        <div class="font-mono text-lg text-gray-300">6034</div>
+                        <div class="text-[10px] text-gray-500 mt-1">baseline</div>
+                    </td>
+                    <td class="p-4 text-center bg-blue-900/10 border-l border-gray-800">
+                        <div class="font-mono font-bold text-xl text-blue-300">3036</div>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-24.7% vs JSON</div>
+                            <div class="text-xs text-green-400 font-bold bg-gray-900 px-2 py-1 rounded border border-gray-700">-49.7% vs YAML</div>
+                        </div>
+                    </td>
+                </tr>
+        
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>
+    

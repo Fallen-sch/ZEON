@@ -1,0 +1,16 @@
+project_name="LION Edge Cases"
+version=1.0
+is_active=True
+deleted_at=None
+config
+  timeout retries
+  30 5
+users[]
+  id name preferences(theme notifications)
+  1 Maria (light True)
+  2 Jose (dark False)
+coordinates[][]
+  10.0 20.0
+  30.0 40.0
+mixed_data=[1 hello (flag=True) [2 3]]
+tensor=[[[1 2] [3 4]]]

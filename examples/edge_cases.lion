@@ -1,0 +1,66 @@
+# ==========================================
+# 1. TABELA DE DICIONÁRIO SIMPLES (1 Linha)
+# Usado para objetos sem repetição. A falta do "[]" avisa 
+# que isso é apenas um Dict, não uma Lista.
+# ==========================================
+customer 
+  id name email phone
+  8472 "Maria Silva" maria@example.com +5511999999999
+
+# ==========================================
+# 2. TABELA DE ARRAY/LISTA COM TUPLAS (Múltiplas Linhas)
+# O sufixo "[]" indica que teremos múltiplas linhas que
+# formam um Array. Além disso, temos "dimensions(weight unit)"
+# que agrupa dois valores em uma tupla aninhada "(1.2 kg)".
+# ==========================================
+items[]
+  product_id name quantity price dimensions(weight unit)
+  SKU-100 "Mechanical Keyboard" 1 150.00 (1.2 kg)
+  SKU-205 "Wireless Mouse" 2 45.50 (0.3 kg)
+
+# ==========================================
+# 3. LISTA DE TIPOS MISTOS OU SIMPLES (Fallback Inline)
+# Quando a lista não é uma tabela uniforme (ex: inteiros, strings,
+# e sub-dicionários misturados), o motor abre colchetes clássicos.
+# ==========================================
+tags=[feature frontend v1.0]
+mixed_data=[1 "texto livre" (idade=30 status=True) [4 5 6]]
+
+# ==========================================
+# 4. LISTA DENTRO DE LISTA (Matriz Matemática)
+# Usando aninhamento tradicional de colchetes, igual ao JSON.
+# ==========================================
+matrix=[
+  [1 2 3]
+  [4 5 6]
+]
+
+# ==========================================
+# 5. TABELA DE ARRAY EXTREMAMENTE ANINHADA (Fallback Multi-linha)
+# Se uma lista possui objetos tão complexos que a tabela ficaria feia,
+# nós usamos os marcadores explícitos "( )" espalhados em linhas.
+# Note que a sub-propriedade "roles[]" aqui dentro também forma uma tabela!
+# ==========================================
+complex_users=[
+  (
+    id=1
+    status=active
+    roles[]
+      name permissions
+      admin "all"
+      dev "write"
+  )
+  (
+    id=2
+    status=banned
+    roles[]
+      name permissions
+      guest "read"
+  )
+]
+
+# ==========================================
+# 6. ARRAYS VAZIOS E OBJETOS VAZIOS
+# ==========================================
+empty_list=[]
+empty_dict=()

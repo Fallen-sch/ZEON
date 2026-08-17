@@ -1,0 +1,44 @@
+{
+  "project_name": "LION Edge Cases",
+  "version": 1.0,
+  "is_active": true,
+  "deleted_at": null,
+  "config": {
+    "timeout": 30,
+    "retries": 5
+  },
+  "users": [
+    {
+      "id": 1,
+      "name": "Maria",
+      "preferences": {
+        "theme": "light",
+        "notifications": true
+      }
+    },
+    {
+      "id": 2,
+      "name": "Jose",
+      "preferences": {
+        "theme": "dark",
+        "notifications": false
+      }
+    }
+  ],
+  "coordinates": [
+    [10.0, 20.0],
+    [30.0, 40.0]
+  ],
+  "mixed_data": [
+    1,
+    "hello",
+    {"flag": true},
+    [2, 3]
+  ],
+  "tensor": [
+    [
+      [1, 2],
+      [3, 4]
+    ]
+  ]
+}

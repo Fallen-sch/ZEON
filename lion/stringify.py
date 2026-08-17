@@ -1,0 +1,167 @@
+import re
+
+def _needs_quotes(s: str) -> bool:
+    if not isinstance(s, str):
+        return False
+    if not s:
+        return True
+    if re.search(r'[\s,"\'\(\)\[\]=\{\}\:]', s):
+        return True
+    if s.lower() in ('true', 'false', 'null', 'none'):
+        return True
+    try:
+        float(s)
+        return True
+    except ValueError:
+        pass
+    return False
+
+def _dump_primitive(val) -> str:
+    if val is None:
+        return "None"
+    elif isinstance(val, bool):
+        return "True" if val else "False"
+    elif isinstance(val, (int, float)):
+        return str(val)
+    elif isinstance(val, str):
+        if _needs_quotes(val):
+            return '"' + val.replace('"', '\\"') + '"'
+        return val
+    else:
+        return f'"{str(val)}"'
+
+def _is_uniform_list_of_dicts(lst: list) -> bool:
+    if not lst or not isinstance(lst[0], dict):
+        return False
+    keys = set(lst[0].keys())
+    for item in lst[1:]:
+        if not isinstance(item, dict) or set(item.keys()) != keys:
+            return False
+        for k in keys:
+            v1 = lst[0][k]
+            v2 = item[k]
+            if isinstance(v1, dict):
+                if not isinstance(v2, dict) or set(v1.keys()) != set(v2.keys()):
+                    return False
+    return True
+
+def _is_matrix_2d(lst: list) -> bool:
+    if not lst or not isinstance(lst[0], list):
+        return False
+    for item in lst:
+        if not isinstance(item, list):
+            return False
+        for v in item:
+            if isinstance(v, dict) or isinstance(v, list):
+                return False
+    return True
+
+def _is_flat_dict(d: dict) -> bool:
+    for v in d.values():
+        if isinstance(v, dict):
+            return False
+        # allow 1D arrays of primitives in flat dict
+        if isinstance(v, list):
+            for x in v:
+                if isinstance(x, (dict, list)):
+                    return False
+    return True
+
+def _get_tabular_headers(lst: list) -> list:
+    first = lst[0]
+    headers = []
+    for k, v in first.items():
+        if isinstance(v, dict):
+            headers.append((k, list(v.keys())))
+        else:
+            headers.append(k)
+    return headers
+
+def _format_header_tuple(header) -> str:
+    if isinstance(header, tuple):
+        return f"{header[0]}({' '.join(header[1])})"
+    return header
+
+def _format_value_for_header(item, header) -> str:
+    if isinstance(header, tuple):
+        main_k, sub_k = header
+        val_dict = item[main_k]
+        vals = [_dump_primitive(val_dict.get(sk)) for sk in sub_k]
+        return f"({' '.join(vals)})"
+    else:
+        v = item[header]
+        if isinstance(v, list):
+            return "[" + " ".join([_dump_primitive(x) for x in v]) + "]"
+        return _dump_primitive(v)
+
+def _dumps_inline(obj) -> str:
+    if isinstance(obj, dict):
+        parts = []
+        for k, v in obj.items():
+            if isinstance(v, dict):
+                parts.append(f"{k}=({_dumps_inline(v)})")
+            elif isinstance(v, list):
+                parts.append(f"{k}={_dumps_inline(v)}")
+            else:
+                parts.append(f"{k}={_dumps_inline(v)}")
+        return " ".join(parts)
+    elif isinstance(obj, list):
+        parts = []
+        for v in obj:
+            if isinstance(v, dict):
+                parts.append(f"({_dumps_inline(v)})")
+            else:
+                parts.append(_dumps_inline(v))
+        return "[" + " ".join(parts) + "]"
+    else:
+        return _dump_primitive(obj)
+
+def _dumps(obj, indent_level=0) -> str:
+    indent_str = "  " * indent_level
+    
+    if isinstance(obj, dict):
+        has_tabular = any(isinstance(v, list) and (_is_uniform_list_of_dicts(v) or _is_matrix_2d(v)) for v in obj.values())
+        if not has_tabular and indent_level > 0:
+            return indent_str + "(" + _dumps_inline(obj) + ")"
+            
+        lines = []
+        for k, v in obj.items():
+            if isinstance(v, list) and _is_matrix_2d(v):
+                lines.append(f"{indent_str}{k}[][]")
+                for row in v:
+                    vals_str = " ".join([_dump_primitive(x) for x in row])
+                    lines.append(f"{indent_str}  {vals_str}")
+            elif isinstance(v, list) and _is_uniform_list_of_dicts(v):
+                headers = _get_tabular_headers(v)
+                header_str = " ".join([_format_header_tuple(h) for h in headers])
+                lines.append(f"{indent_str}{k}[]")
+                lines.append(f"{indent_str}  {header_str}")
+                for item in v:
+                    vals_str = " ".join([_format_value_for_header(item, h) for h in headers])
+                    lines.append(f"{indent_str}  {vals_str}")
+            elif isinstance(v, list) and len(v) > 0 and isinstance(v[0], dict):
+                parts = [f"({_dumps_inline(item)})" for item in v]
+                lines.append(f"{indent_str}{k}=[\n{indent_str}  " + f"\n{indent_str}  ".join(parts) + f"\n{indent_str}]")
+            elif isinstance(v, dict):
+                if _is_flat_dict(v):
+                    headers = list(v.keys())
+                    header_str = " ".join(headers)
+                    vals_str = " ".join([_dump_primitive(v[hk]) if not isinstance(v[hk], list) else "[" + " ".join([_dump_primitive(x) for x in v[hk]]) + "]" for hk in headers])
+                    lines.append(f"{indent_str}{k}")
+                    lines.append(f"{indent_str}  {header_str}")
+                    lines.append(f"{indent_str}  {vals_str}")
+                else:
+                    lines.append(f"{indent_str}{k}=({_dumps_inline(v)})")
+            elif isinstance(v, list):
+                lines.append(f"{indent_str}{k}={_dumps_inline(v)}")
+            else:
+                lines.append(f"{indent_str}{k}={_dumps_inline(v)}")
+        return "\n".join(lines)
+        
+    elif isinstance(obj, list):
+        return indent_str + "[" + _dumps_inline(obj) + "]"
+    else:
+        return indent_str + _dump_primitive(obj)
+
+def dumps(obj) -> str:
+    return _dumps(obj, 0)
