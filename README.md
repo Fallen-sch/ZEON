@@ -195,6 +195,19 @@ This translates to significantly increased effective context window for your LLM
 
 ---
 
+## When Not to Use ZEON (And Workarounds)
+
+While ZEON is incredibly powerful for AI inference, it is highly sensitive to indentation and syntax. 
+
+**1. Authoring Data Manually**
+Writing data directly in ZEON by hand can be tricky because missing a single space or indentation level could alter the parsed output. 
+**The Solution:** You don't have to write ZEON! Since ZEON is 100% losslessly compatible with JSON, you can write and maintain your data in standard JSON or YAML, and simply use our CLI tool or Python library to translate it to ZEON right before sending the prompt to the LLM.
+
+**2. Purely Flat Tabular Data (No Nesting at All)**
+If your data is 100% flat (like a classic spreadsheet with no nested objects or arrays), standard CSV might technically use slightly fewer tokens than ZEON. However, CSV breaks down completely the moment you need to include a nested array or object, whereas ZEON handles it flawlessly.
+
+---
+
 ## CLI Usage
 
 ZEON ships with a powerful bidirectional CLI tool to convert your existing datasets between ZEON, JSON and YAML formats.

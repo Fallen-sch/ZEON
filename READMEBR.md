@@ -195,6 +195,19 @@ Isso se traduz em um contexto efetivo significativamente maior para suas aplica�
 
 ---
 
+## Quando NÃO usar o ZEON (E como contornar)
+
+Embora o ZEON seja incrivelmente poderoso para reduzir os custos de inference de IA, ele é altamente sensível à indentação e formatação.
+
+**1. Escrevendo Dados Manualmente**
+Escrever ou editar arquivos diretamente em ZEON à mão pode ser difícil, pois errar um espaço ou nível de indentação pode alterar a forma como os dados são interpretados. 
+**A Solução:** Você não precisa escrever em ZEON! Como o formato tem compatibilidade 100% bidirecional com JSON, você pode simplesmente escrever e manter seus dados no bom e velho JSON ou YAML, e usar nossa ferramenta CLI ou biblioteca Python para convertê-los para ZEON de forma invisível instantes antes de enviar ao LLM.
+
+**2. Dados 100% Tabulares e Planos (Sem Aninhamento)**
+Se os seus dados são completamente planos (como uma planilha clássica de Excel, sem nenhum objeto ou lista dentro das células), um formato CSV puro pode usar ligeiramente menos tokens. No entanto, o CSV quebra completamente assim que você tenta inserir um objeto aninhado nele, enquanto o ZEON absorve isso de forma nativa e limpa.
+
+---
+
 ## Uso da CLI
 
 O ZEON vem com uma ferramenta de Linha de Comando (CLI) bidirecional para converter seus conjuntos de dados entre ZEON, JSON e YAML sem esforço.
