@@ -181,14 +181,17 @@ lion_text = lion.dumps(data)
 
 # Conversão direta de strings
 json_text = lion.convert(lion_text).to_json()
-lion_text = lion.convert(json_text).to_lion()
+yaml_text = lion.convert(lion_text).to_yaml()
+lion_text = lion.convert(yaml_text).to_lion()
 
 # Conversão direta de arquivos
 # 1. Passar apenas o nome do arquivo salvará automaticamente na mesma pasta do original
-lion.convert("dados.lion").to_json("dados.json")
+lion.convert("pasta/secreta/dados.lion").to_json("dados.json")
+lion.convert("pasta/secreta/dados.lion").to_yaml("dados.yaml")
 
 # 2. Ou passe um caminho completo para salvar em outro local específico
-lion.convert("dados.lion").to_json("exports/meus_dados.json")
+lion.convert("pasta/secreta/dados.lion").to_json("exports/meus_dados.json")
+lion.convert("pasta/secreta/dados.yaml").to_lion("exports/meus_dados.lion")
 ```
 
 ---

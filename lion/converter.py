@@ -42,12 +42,40 @@ class Converter:
                 
         return result
 
-    def to_lion(self, out_path: str = None, **kwargs) -> str:
+    def to_yaml(self, out_path: str = None, **kwargs) -> str:
         """
-        Parses JSON content and returns LION string.
+        Parses LION content and returns YAML string.
         If out_path is provided, it saves to the file.
         """
-        parsed_data = json.loads(self.content)
+        import yaml
+        parsed_data = loads(self.content)
+        
+        if not kwargs and 'sort_keys' not in kwargs:
+            result = yaml.safe_dump(parsed_data, sort_keys=False)
+        else:
+            result = yaml.safe_dump(parsed_data, **kwargs)
+            
+        if out_path:
+            if self.is_file and not os.path.dirname(out_path):
+                original_dir = os.path.dirname(self.file_path)
+                out_path = os.path.join(original_dir, out_path)
+                
+            with open(out_path, 'w', encoding='utf-8') as f:
+                f.write(result)
+                
+        return result
+
+    def to_lion(self, out_path: str = None, **kwargs) -> str:
+        """
+        Parses JSON or YAML content and returns LION string.
+        If out_path is provided, it saves to the file.
+        """
+        try:
+            parsed_data = json.loads(self.content)
+        except json.JSONDecodeError:
+            import yaml
+            parsed_data = yaml.safe_load(self.content)
+            
         result = dumps(parsed_data, **kwargs)
         
         if out_path:

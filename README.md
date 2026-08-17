@@ -181,14 +181,17 @@ lion_text = lion.dumps(data)
 
 # Direct string conversion
 json_text = lion.convert(lion_text).to_json()
-lion_text = lion.convert(json_text).to_lion()
+yaml_text = lion.convert(lion_text).to_yaml()
+lion_text = lion.convert(yaml_text).to_lion()
 
 # Direct file conversion
 # 1. Provide only the filename to save it automatically in the same directory as the original
-lion.convert("data.lion").to_json("data.json")
+lion.convert("path/to/data.lion").to_json("data.json")
+lion.convert("path/to/data.lion").to_yaml("data.yaml")
 
 # 2. Or provide a custom path to save it elsewhere
-lion.convert("data.lion").to_json("exports/my_data.json")
+lion.convert("path/to/data.lion").to_json("exports/my_data.json")
+lion.convert("path/to/data.json").to_lion("exports/my_data.lion")
 ```
 
 ---
