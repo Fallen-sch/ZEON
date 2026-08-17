@@ -51,4 +51,9 @@ venv.bak/
 output*.txt
 
 # root
+examples/
 
+# Tests
+.pytest_cache/
+tests/**/*.json
+tests/**/*.lion
