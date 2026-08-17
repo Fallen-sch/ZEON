@@ -3,7 +3,7 @@
   "status": "shipped",
   "created_at": "2026-08-16T14:30:00Z",
   "customer": {
-    "id": 8472,
+    "id": [],
     "name": "Maria Silva",
     "email": "maria@example.com",
     "phone": "+5511999999999"

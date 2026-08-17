@@ -52,6 +52,7 @@ output*.txt
 
 # root
 examples/
+token.txt
 
 # Tests
 .pytest_cache/
