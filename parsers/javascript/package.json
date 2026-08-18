@@ -1,0 +1,33 @@
+{
+  "name": "zeon-format",
+  "version": "1.1.0",
+  "description": "Official JavaScript/TypeScript parser for the ZEON data configuration language.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "zeon",
+    "parser",
+    "yaml",
+    "json",
+    "toml",
+    "configuration"
+  ],
+  "author": "ZEON Project",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/js-yaml": "^4.0.9",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.12",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "js-yaml": "^5.3.0"
+  }
+}
