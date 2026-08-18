@@ -79,20 +79,37 @@ users[]
   2 guest
 ```
 
-### 4. Nested Tuples
-If an object contains a sub-object uniformly, you can declare it in the header using `key(sub1 sub2)` and map values using `(val1 val2)`.
+### 4. Nested Tuples and Dynamic Attributes (Mixed Kwargs)
+If an object contains a sub-object uniformly, you can declare it in the header using `key(sub1 sub2)` and map values positionally using `(val1 val2)`.
 ```python
 products[]
   id dimensions(weight unit)
   1 (1.2 kg)
 ```
-
-### 5. 2D Matrices
-Use the `[][]` suffix for pure multidimensional arrays with no headers (e.g., coordinates, tensor data).
+**Mixed Kwargs:** You can dynamically append extra keyed attributes to a tuple using `key=value` format at the end. The positional elements map to the header, and any extra key-value pairs are seamlessly merged into the resulting JSON object:
 ```python
-shipping_route[][]
+items[]
+  name attributes(damage defense)
+  sword (10 10 extra_fire=5)
+```
+This gracefully parses to `{"damage": 10, "defense": 10, "extra_fire": 5}`.
+
+
+### 5. N-Dimensional Matrices
+Use the `[][]`, `[2]`, or `[3]` suffixes for pure multidimensional arrays with no headers (e.g., coordinates, tensor data). 
+For 3D Matrices (`[3]`), layers are separated by a double newline.
+
+```python
+shipping_route[2]
   -23.5505 -46.6333
   -23.5501 -46.6341
+
+cube_data[3]
+  1 1
+  1 1
+
+  0 0
+  0 0
 ```
 
 ### 6. Visual Annotations (Ignored by Parser)
@@ -147,6 +164,13 @@ environments{}
   staging eu-central-1 2 True
 ```
 
+If your dictionary values are simply arrays (lists of primitives), you can use the **Dictionary of Arrays** suffix `{[]}` to completely skip the header row:
+```python
+user_roles{[]}
+  "admin" 1 2 3
+  "guest" 4 5
+```
+
 ### 10. Mixed Data Fallback
 If an array contains irregular or heavily nested mixed types where no common header exists, ZEON gracefully falls back to an "inline" format.
 
@@ -195,16 +219,17 @@ This translates to significantly increased effective context window for your LLM
 
 ---
 
-## When Not to Use ZEON (And Workarounds)
+## Developer Experience (VSCode Extension)
 
-While ZEON is incredibly powerful for AI inference, it is highly sensitive to indentation and syntax. 
+Although writing highly complex or deeply nested structures in a whitespace-sensitive format might seem challenging at first, you don't have to do it in the dark! You can count on our **Official VSCode Extension** to do the heavy lifting for you.
 
-**1. Authoring Data Manually**
-Writing data directly in ZEON by hand can be tricky because missing a single space or indentation level could alter the parsed output. 
-**The Solution:** You don't have to write ZEON! Since ZEON is 100% losslessly compatible with JSON, you can write and maintain your data in standard JSON or YAML, and simply use our CLI tool or Python library to translate it to ZEON right before sending the prompt to the LLM.
+The ZEON extension provides a world-class developer experience:
+- **Real-time Linter**: Instantly catches syntax errors, invalid indentation, or incorrect suffixes as you type.
+- **Syntax Highlighting**: Beautiful colorization for matrices, tables, primitives, and inline attributes.
+- **Interactive Live Preview**: Opens a side-by-side visual preview that renders your `.zeon` file as an interactive grid! It allows you to collapse large tables, expand long text cells, and even **edit values directly in the visual interface** (pressing `Ctrl+S` updates your file instantly).
+- **Automatic Conversion (CLI)**: Remember that you are never forced to write ZEON from scratch. Since the format is 100% bidirectionally compatible with JSON, you can use our CLI tool to automatically translate any existing JSON or YAML file into ZEON instantly!
 
-**2. Purely Flat Tabular Data (No Nesting at All)**
-If your data is 100% flat (like a classic spreadsheet with no nested objects or arrays), standard CSV might technically use slightly fewer tokens than ZEON. However, CSV breaks down completely the moment you need to include a nested array or object, whereas ZEON handles it flawlessly.
+With the extension and the CLI, managing complex LLM payloads becomes as easy and friendly as editing a spreadsheet.
 
 ---
 
@@ -229,6 +254,7 @@ zeon convert data.yaml --print
 
 ## Installation
 
+### Python
 ZEON is officially available on PyPI and can be installed via `pip`:
 
 ```bash
@@ -258,6 +284,29 @@ zeon.convert("path/to/data.zeon").to_yaml("data.yaml")
 # 2. Or provide a custom path to save it elsewhere
 zeon.convert("path/to/data.zeon").to_json("exports/my_data.json")
 zeon.convert("path/to/data.json").to_zeon("exports/my_data.zeon")
+```
+
+### Node.js / TypeScript
+ZEON is officially available on NPM and can be installed via `npm`. You can read the full NPM documentation at [parsers/javascript](parsers/javascript/README.md).
+
+```bash
+npm install zeon-parser
+```
+
+To use it in your code:
+```typescript
+import { parse } from 'zeon-parser';
+
+const zeonText = `
+project_name="ZEON"
+config
+  timeout retries
+  30 5
+\`;
+
+const result = parse(zeonText);
+console.log(result.project_name); // ZEON
+console.log(result.config.timeout); // 30
 ```
 
 ---

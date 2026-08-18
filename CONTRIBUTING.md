@@ -1,6 +1,6 @@
-# Contributing to LION
+# Contributing to ZEON
 
-Thank you for your interest in contributing to LION (Lightweight LLM Object Notation)! This project focuses on maximizing token efficiency for LLMs.
+Thank you for your interest in contributing to ZEON (Zero-overhead Encoding Object Notation)! This project focuses on maximizing token efficiency for LLMs.
 
 To ensure code quality and format stability, we enforce a strict and organized workflow. Please read the guidelines below before starting any work.
 
@@ -40,4 +40,4 @@ To run the project and tests locally:
    poetry run python tests/test_benchmark.py
    ```
 
-We appreciate your time and effort in making LION better!
+We appreciate your time and effort in making ZEON better!

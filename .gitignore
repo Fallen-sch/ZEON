@@ -56,6 +56,12 @@ example.md
 token.txt
 BENCHMARKS.md
 
+# JavaScript / VSCode Extension
+node_modules/
+out/
+*.vsix
+
+
 # Tests
 .pytest_cache/
 tests/**/*.json

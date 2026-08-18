@@ -79,20 +79,37 @@ users[]
   2 guest
 ```
 
-### 4. Tuplas Aninhadas
-Se um objeto contém um sub-objeto de forma repetitiva e uniforme, você pode declará-lo no cabeçalho usando `chave(sub1 sub2)` e mapear os valores usando `(val1 val2)`.
+### 4. Tuplas Aninhadas e Atributos Dinâmicos (Mixed Kwargs)
+Se um objeto contém um sub-objeto de forma repetitiva e uniforme, você pode declará-lo no cabeçalho usando `chave(sub1 sub2)` e mapear os valores posicionalmente usando `(val1 val2)`.
 ```python
 products[]
   id dimensions(weight unit)
   1 (1.2 kg)
 ```
-
-### 5. Matrizes 2D
-Use o sufixo `[][]` para arrays multidimensionais puros, sem cabeçalhos (ex: coordenadas, dados de tensores).
+**Atributos Dinâmicos (Mixed Kwargs):** Você também pode adicionar chaves e valores extras no final da tupla usando `chave=valor`. Os elementos posicionais preencherão o que foi pedido no cabeçalho, e qualquer atributo extra será injetado nativamente no objeto JSON gerado!
 ```python
-shipping_route[][]
+items[]
+  name attributes(damage defense)
+  sword (10 10 extra_fire=5)
+```
+Isso é perfeitamente convertido para: `{"damage": 10, "defense": 10, "extra_fire": 5}`.
+
+
+### 5. Matrizes N-Dimensionais
+Use os sufixos `[][]`, `[2]`, ou `[3]` para arrays multidimensionais puros, sem cabeçalhos (ex: coordenadas, dados de tensores).
+Para Matrizes 3D (`[3]`), as fatias/camadas são separadas por uma linha em branco dupla.
+
+```python
+shipping_route[2]
   -23.5505 -46.6333
   -23.5501 -46.6341
+
+cube_data[3]
+  1 1
+  1 1
+
+  0 0
+  0 0
 ```
 
 ### 6. Anotações Visuais (Ignoradas pelo Parser)
@@ -147,6 +164,13 @@ environments{}
   staging eu-central-1 2 True
 ```
 
+Se os valores do seu dicionário forem simplesmente arrays (listas de primitivos), você pode usar o sufixo de **Dicionário de Arrays** `{[]}` para pular completamente a linha de cabeçalhos:
+```python
+user_roles{[]}
+  "admin" 1 2 3
+  "guest" 4 5
+```
+
 ### 10. Fallback para Dados Mistos
 Se um array contiver tipos mistos, irregulares ou profundamente aninhados onde um cabeçalho não existe, o ZEON volta graciosamente para um formato "inline" de segurança.
 
@@ -195,16 +219,17 @@ Isso se traduz em um contexto efetivo significativamente maior para suas aplica�
 
 ---
 
-## Quando NÃO usar o ZEON (E como contornar)
+## O Poder da Extensão do VSCode
 
-Embora o ZEON seja incrivelmente poderoso para reduzir os custos de inference de IA, ele é altamente sensível à indentação e formatação.
+Embora possa parecer desafiador entender e escrever estruturas muito complexas num formato sensível a indentação, você não precisa fazer isso no escuro! Você pode contar com a ajuda da nossa **Extensão Oficial para o VSCode**, que faz todo o trabalho pesado por você.
 
-**1. Escrevendo Dados Manualmente**
-Escrever ou editar arquivos diretamente em ZEON à mão pode ser difícil, pois errar um espaço ou nível de indentação pode alterar a forma como os dados são interpretados. 
-**A Solução:** Você não precisa escrever em ZEON! Como o formato tem compatibilidade 100% bidirecional com JSON, você pode simplesmente escrever e manter seus dados no bom e velho JSON ou YAML, e usar nossa ferramenta CLI ou biblioteca Python para convertê-los para ZEON de forma invisível instantes antes de enviar ao LLM.
+A extensão do ZEON oferece uma experiência de desenvolvimento de primeira classe:
+- **Linter em Tempo Real**: Acusa instantaneamente qualquer erro de sintaxe, indentação inválida ou sufixos incorretos enquanto você digita.
+- **Syntax Highlighting**: Colorização bonita e inteligente para matrizes, tabelas, primitivos e atributos *inline*.
+- **Live Preview Interativo**: Fornece uma pré-visualização visual lado a lado que renderiza seu arquivo `.zeon` como uma grade interativa! Ele permite que você recolha tabelas grandes, expanda textos longos e até mesmo **edite os valores diretamente na interface visual** (pressionando `Ctrl+S` para atualizar seu arquivo instantaneamente).
+- **Conversão Automática (CLI)**: Lembre-se que você nunca é obrigado a escrever ZEON do zero. Como o formato tem compatibilidade 100% bidirecional, você pode usar nossa CLI para traduzir qualquer JSON ou YAML para ZEON instantaneamente!
 
-**2. Dados 100% Tabulares e Planos (Sem Aninhamento)**
-Se os seus dados são completamente planos (como uma planilha clássica de Excel, sem nenhum objeto ou lista dentro das células), um formato CSV puro pode usar ligeiramente menos tokens. No entanto, o CSV quebra completamente assim que você tenta inserir um objeto aninhado nele, enquanto o ZEON absorve isso de forma nativa e limpa.
+Com a extensão e a CLI, gerenciar payloads complexos para LLMs se torna tão fácil e amigável quanto editar uma planilha.
 
 ---
 
@@ -229,6 +254,7 @@ zeon convert config.yaml --print
 
 ## Instalação
 
+### Python
 O ZEON está oficialmente disponível no PyPI e pode ser instalado via `pip`:
 
 ```bash
@@ -258,6 +284,29 @@ zeon.convert("pasta/secreta/dados.zeon").to_yaml("dados.yaml")
 # 2. Ou passe um caminho completo para salvar em outro local específico
 zeon.convert("pasta/secreta/dados.zeon").to_json("exports/meus_dados.json")
 zeon.convert("pasta/secreta/dados.yaml").to_zeon("exports/meus_dados.zeon")
+```
+
+### Node.js / TypeScript
+O ZEON está oficialmente disponível no NPM e pode ser instalado via `npm`. Você pode ler a documentação completa do NPM em [parsers/javascript](parsers/javascript/READMEBR.md).
+
+```bash
+npm install zeon-parser
+```
+
+Para usá-lo em seu código:
+```typescript
+import { parse } from 'zeon-parser';
+
+const zeonText = `
+project_name="ZEON"
+config
+  timeout retries
+  30 5
+\`;
+
+const result = parse(zeonText);
+console.log(result.project_name); // ZEON
+console.log(result.config.timeout); // 30
 ```
 
 ---

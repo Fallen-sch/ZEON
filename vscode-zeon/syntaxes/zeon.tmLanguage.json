@@ -1,0 +1,101 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "ZEON",
+  "scopeName": "source.zeon",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#numbers"
+    },
+    {
+      "include": "#symbols"
+    },
+    {
+      "include": "#headers"
+    },
+    {
+      "include": "#keys"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.zeon",
+          "match": "#.*$"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.zeon",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.zeon",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.zeon",
+          "match": "\\b(True|False|None)\\b"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.zeon",
+          "match": "\\b-?(0|[1-9]\\d*)(\\.\\d+)?([eE][+-]?\\d+)?\\b"
+        }
+      ]
+    },
+    "symbols": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.zeon",
+          "match": "="
+        },
+        {
+          "name": "punctuation.definition.array.zeon",
+          "match": "(\\[|\\])"
+        },
+        {
+          "name": "punctuation.definition.dictionary.zeon",
+          "match": "(\\{|\\})"
+        },
+        {
+          "name": "punctuation.definition.group.zeon",
+          "match": "(\\(|\\))"
+        }
+      ]
+    },
+    "headers": {
+      "patterns": [
+        {
+          "name": "entity.name.tag.zeon",
+          "match": "^[ \\t]*[a-zA-Z0-9_\\-]+(?=\\[\\]|\\[\\d+\\]|\\{\\}|\\{\\[\\]\\}|\\(\\))"
+        }
+      ]
+    },
+    "keys": {
+      "patterns": [
+        {
+          "name": "variable.other.property.zeon",
+          "match": "\\b[a-zA-Z0-9_\\-]+(?=\\=)"
+        }
+      ]
+    }
+  }
+}

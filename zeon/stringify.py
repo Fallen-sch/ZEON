@@ -56,12 +56,15 @@ def _get_hybrid_headers(lst: list) -> list:
                 sub_keys = set(v1.keys())
                 valid = True
                 for item in lst[1:]:
-                    v2 = item[k]
-                    if not isinstance(v2, dict) or set(v2.keys()) != sub_keys:
+                    v2 = item.get(k)
+                    if not isinstance(v2, dict):
                         valid = False
                         break
-                if valid:
-                    headers.append((k, list(v1.keys())))
+                    sub_keys.intersection_update(v2.keys())
+                
+                if valid and sub_keys:
+                    ordered_sub_keys = [sk for sk in v1.keys() if sk in sub_keys]
+                    headers.append((k, ordered_sub_keys))
                 else:
                     headers.append(k)
             else:
@@ -81,6 +84,25 @@ def _is_matrix_2d(lst: list) -> bool:
             return False
         for v in item:
             if isinstance(v, dict) or isinstance(v, list):
+                return False
+    return True
+
+def _is_matrix_3d(lst: list) -> bool:
+    if not lst or not isinstance(lst[0], list):
+        return False
+    for item in lst:
+        if not _is_matrix_2d(item):
+            return False
+    return True
+
+def _is_dict_of_arrays(d: dict) -> bool:
+    if not d:
+        return False
+    for v in d.values():
+        if not isinstance(v, list):
+            return False
+        for x in v:
+            if isinstance(x, (dict, list)):
                 return False
     return True
 
@@ -106,6 +128,12 @@ def _format_value_for_header(item, header) -> str:
         main_k, sub_k = header
         val_dict = item.get(main_k, {})
         vals = [_dump_primitive(val_dict.get(sk)) for sk in sub_k]
+        
+        extra_keys = [ek for ek in val_dict.keys() if ek not in set(sub_k)]
+        if extra_keys:
+            extra_dict = {ek: val_dict[ek] for ek in extra_keys}
+            vals.append(_dumps_inline(extra_dict))
+            
         return f"({' '.join(vals)})"
     else:
         v = item.get(header)
@@ -141,15 +169,23 @@ def _dumps(obj, indent_level=0) -> str:
     indent_str = "  " * indent_level
     
     if isinstance(obj, dict):
-        has_tabular = any(isinstance(v, list) and (len(_get_hybrid_headers(v)) > 0 or _is_matrix_2d(v)) for v in obj.values())
-        has_keyed_tabular = any(isinstance(v, dict) and len(_get_keyed_tabular_headers(v)) > 0 for v in obj.values())
+        has_tabular = any(isinstance(v, list) and (len(_get_hybrid_headers(v)) > 0 or _is_matrix_2d(v) or _is_matrix_3d(v)) for v in obj.values())
+        has_keyed_tabular = any(isinstance(v, dict) and (len(_get_keyed_tabular_headers(v)) > 0 or _is_dict_of_arrays(v)) for v in obj.values())
         if not has_tabular and not has_keyed_tabular and indent_level > 0:
             return indent_str + "(" + _dumps_inline(obj) + ")"
             
         lines = []
         for k, v in obj.items():
-            if isinstance(v, list) and _is_matrix_2d(v):
-                lines.append(f"{indent_str}{k}[][]")
+            if isinstance(v, list) and _is_matrix_3d(v):
+                lines.append(f"{indent_str}{k}[3]")
+                for slice_idx, slice_2d in enumerate(v):
+                    if slice_idx > 0:
+                        lines.append("")
+                    for row in slice_2d:
+                        vals_str = " ".join([_dump_primitive(x) for x in row])
+                        lines.append(f"{indent_str}  {vals_str}")
+            elif isinstance(v, list) and _is_matrix_2d(v):
+                lines.append(f"{indent_str}{k}[2]")
                 for row in v:
                     vals_str = " ".join([_dump_primitive(x) for x in row])
                     lines.append(f"{indent_str}  {vals_str}")
@@ -211,6 +247,11 @@ def _dumps(obj, indent_level=0) -> str:
                     if extra_keys:
                         extra_dict = {ek: item[ek] for ek in extra_keys}
                         vals_str += f" {_dumps_inline(extra_dict)}"
+                    lines.append(f"{indent_str}  {vals_str}")
+            elif isinstance(v, dict) and _is_dict_of_arrays(v):
+                lines.append(f"{indent_str}{k}{{[]}}")
+                for dict_key, arr in v.items():
+                    vals_str = f"{_dump_primitive(dict_key)} " + " ".join([_dump_primitive(x) for x in arr])
                     lines.append(f"{indent_str}  {vals_str}")
             elif isinstance(v, dict):
                 if _is_flat_dict(v):

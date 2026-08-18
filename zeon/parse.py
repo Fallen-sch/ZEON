@@ -28,6 +28,7 @@ class Lexer:
                 
             stripped = line.lstrip()
             if not stripped:
+                self.tokens.append(Token('NEWLINE', '\n', self.line, 0))
                 continue
                 
             indent = len(line) - len(stripped)
@@ -121,10 +122,17 @@ class Parser:
         return self.parse_dict()
 
     def _skip_key_annotation(self):
-        # Ignora anotações visuais estilo chave[anotacao], mas NÃO consome colchetes vazios []
+        # Ignora anotações visuais estilo chave[anotacao], mas NÃO consome colchetes vazios [] nem atalhos de matriz como [2]
         if self.peek().type == '[':
-            # Verifica se o próximo token não é ']'
-            if self.pos + 1 < len(self.tokens) and self.tokens[self.pos+1].type != ']':
+            # Verifica se o próximo token não é ']' e não é um NUMBER seguido de ']'
+            if self.pos + 1 < len(self.tokens):
+                next_tok = self.tokens[self.pos+1]
+                if next_tok.type == ']':
+                    return
+                if next_tok.type == 'NUMBER':
+                    if self.pos + 2 < len(self.tokens) and self.tokens[self.pos+2].type == ']':
+                        return
+                        
                 self.consume('[')
                 while self.peek().type not in (']', 'NEWLINE', 'EOF'):
                     self.consume()
@@ -155,6 +163,14 @@ class Parser:
                         self.consume('[')
                         self.consume(']')
                         array_depth += 1
+                    elif self.pos + 1 < len(self.tokens) and self.tokens[self.pos+1].type == 'NUMBER':
+                        if self.pos + 2 < len(self.tokens) and self.tokens[self.pos+2].type == ']':
+                            self.consume('[')
+                            num = int(self.consume('NUMBER').value)
+                            self.consume(']')
+                            array_depth += num
+                        else:
+                            break
                     else:
                         break
                 elif self.peek().type == '{':
@@ -162,7 +178,19 @@ class Parser:
                         self.consume('{')
                         self.consume('}')
                         is_keyed_tabular = True
-                        break
+                    elif self.pos + 1 < len(self.tokens) and self.tokens[self.pos+1].type == '[':
+                        if self.pos + 2 < len(self.tokens) and self.tokens[self.pos+2].type == ']':
+                            if self.pos + 3 < len(self.tokens) and self.tokens[self.pos+3].type == '}':
+                                self.consume('{')
+                                self.consume('[')
+                                self.consume(']')
+                                self.consume('}')
+                                is_keyed_tabular = True
+                                array_depth += 1
+                            else:
+                                break
+                        else:
+                            break
                     else:
                         break
                 else:
@@ -195,14 +223,52 @@ class Parser:
         self.consume('NEWLINE')
         self.consume('INDENT')
         
-        if array_depth >= 2:
-            res = []
+        if array_depth >= 2 or (is_keyed_tabular and array_depth >= 1):
+            res = {} if is_keyed_tabular else []
+            current_slice = []
+            
+            # Initial newline skipping
+            newline_count = 0
+            while self.peek().type == 'NEWLINE':
+                self.consume('NEWLINE')
+                newline_count += 1
+                
             while self.peek().type not in ('DEDENT', 'EOF'):
-                self._skip_newlines()
                 if self.peek().type == 'DEDENT':
                     break
+                    
+                if array_depth >= 3 and newline_count >= 2 and current_slice:
+                    if not is_keyed_tabular:
+                        res.append(current_slice)
+                    current_slice = []
+                    
+                dict_key = None
+                if is_keyed_tabular:
+                    key_tok = self.peek()
+                    if key_tok.type not in ('IDENTIFIER', 'NUMBER', 'STRING'):
+                        raise ValueError(f"Expected dict key for keyed matrix row, got {key_tok.type} at line {key_tok.line}")
+                    self.consume()
+                    dict_key = str(key_tok.value)
+                    
                 row = self.parse_tuple_row()
-                res.append(row)
+                
+                if array_depth >= 3:
+                    current_slice.append(row)
+                else:
+                    if is_keyed_tabular:
+                        res[dict_key] = row
+                    else:
+                        res.append(row)
+                
+                # After row, parse any newlines for the next iteration
+                newline_count = 0
+                while self.peek().type == 'NEWLINE':
+                    self.consume('NEWLINE')
+                    newline_count += 1
+                    
+            if array_depth >= 3 and current_slice:
+                res.append(current_slice)
+                
             self.consume('DEDENT')
             return res
             
@@ -271,8 +337,15 @@ class Parser:
                     val = self.parse_value()
                     if isinstance(val, (tuple, list)):
                         row_dict[main_k] = dict(zip(sub_k, val))
+                    elif isinstance(val, dict):
+                        sub_dict = val.copy()
+                        for i, sk in enumerate(sub_k):
+                            str_i = str(i)
+                            if str_i in sub_dict:
+                                sub_dict[sk] = sub_dict.pop(str_i)
+                        row_dict[main_k] = sub_dict
                     else:
-                        raise ValueError(f"Expected tuple/list for {main_k}")
+                        raise ValueError(f"Expected tuple/list or dict for {main_k} at line {self.peek().line}")
                 else:
                     row_dict[header] = self.parse_value()
                     
@@ -323,51 +396,49 @@ class Parser:
 
     def parse_inline_group(self):
         self.consume('(')
-        is_dict = False
-        temp = self.pos
-        while temp < len(self.tokens) and self.tokens[temp].type != ')':
-            if self.tokens[temp].type in ('NEWLINE', 'INDENT', 'DEDENT'):
-                temp += 1
-                continue
-            if self.tokens[temp].type == '=':
-                is_dict = True
+        res = {}
+        pos_idx = 0
+        has_kwargs = False
+        
+        while self.peek().type != ')':
+            while self.peek().type in ('NEWLINE', 'INDENT', 'DEDENT'):
+                self.consume()
+            if self.peek().type == ')':
                 break
-            temp += 1
-            
-        if is_dict:
-            # Modificação: usar um wrapper loop para ignorar NEWLINE, INDENT e DEDENT
-            res = {}
-            while self.peek().type != ')':
-                while self.peek().type in ('NEWLINE', 'INDENT', 'DEDENT'):
-                    self.consume()
-                if self.peek().type == ')':
-                    break
                 
+            temp = self.pos
+            tok = self.tokens[temp]
+            is_kwarg = False
+            
+            if tok.type in ('IDENTIFIER', 'NUMBER', 'STRING'):
+                temp += 1
+                while temp < len(self.tokens) and self.tokens[temp].type == '[':
+                    temp += 1
+                    if temp < len(self.tokens) and self.tokens[temp].type == ']':
+                        temp += 1
+                    else:
+                        break
+                if temp < len(self.tokens) and self.tokens[temp].type == '=':
+                    is_kwarg = True
+                    
+            if is_kwarg:
+                has_kwargs = True
                 key_tok = self.peek()
-                if key_tok.type not in ('IDENTIFIER', 'NUMBER', 'STRING'):
-                    raise ValueError(f"Expected dict key in group, got {key_tok.type}")
                 self.consume()
                 key = str(key_tok.value)
-                
                 self._skip_key_annotation()
+                self.consume('=')
+                res[key] = self.parse_value()
+            else:
+                val = self.parse_value()
+                res[str(pos_idx)] = val
+                pos_idx += 1
                 
-                if self.peek().type == '=':
-                    self.consume('=')
-                    res[key] = self.parse_value()
-                else:
-                    raise ValueError(f"Expected '=' after key '{key}'")
-                    
-            self.consume(')')
-        else:
-            res = []
-            while self.peek().type != ')':
-                while self.peek().type in ('NEWLINE', 'INDENT', 'DEDENT'):
-                    self.consume()
-                if self.peek().type == ')':
-                    break
-                res.append(self.parse_value())
-            self.consume(')')
-            res = tuple(res)
+        self.consume(')')
+        
+        if not has_kwargs:
+            return tuple(res[str(i)] for i in range(pos_idx))
+            
         return res
 
     def parse_value(self):
