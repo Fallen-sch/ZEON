@@ -2,15 +2,25 @@
   <img src="vscode-zeon/icons/zeon-logo.png" alt="ZEON Logo" width="120" />
   <h1>ZEON</h1>
   <p><strong>Zero-overhead Encoding Object Notation</strong></p>
-  <p>A tabular serialization format designed for maximum LLM token efficiency.</p>
+  <p>Stop wasting 40% of your LLM tokens on JSON keys and quotes. ZEON is a tabular data format that drastically reduces your API costs with OpenAI/Claude.</p>
   <p>
     <a href="https://pypi.org/project/zeon-format/"><img src="https://img.shields.io/pypi/v/zeon-format?color=ffd343&label=PyPI" alt="PyPI Version" /></a>
     <a href="https://www.npmjs.com/package/zeon-format"><img src="https://img.shields.io/npm/v/zeon-format?color=38bdf8&label=NPM" alt="NPM Version" /></a>
-    <a href="https://marketplace.visualstudio.com/items?itemName=FallenBR.zeon-vscode"><img src="https://img.shields.io/badge/VS%20Code-v1.0.0-0ea5e9?logo=visualstudiocode" alt="VS Code Extension" /></a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=FallenBR.zeon-vscode"><img src="https://img.shields.io/badge/VS%20Code-v1.1.2-0ea5e9?logo=visualstudiocode" alt="VS Code Extension" /></a>
     <a href="https://open-vsx.org/extension/FallenBR/zeon-vscode"><img src="https://img.shields.io/open-vsx/v/FallenBR/zeon-vscode?color=8b5cf6&label=Open%20VSX" alt="Open VSX Registry" /></a>
-    <a href="tests/README.md"><img src="https://img.shields.io/badge/tests-76%20passed-brightgreen.svg" alt="Tests" /></a>
+    <a href="https://github.com/Fallen-sch/ZEON/actions/workflows/ci.yml"><img src="https://github.com/Fallen-sch/ZEON/actions/workflows/ci.yml/badge.svg?branch=main" alt="Build Status" /></a>
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" />
   </p>
+</div>
+
+<div align="center">
+  <br/>
+  <a href="#">
+    <img src="vscode-zeon/icons/demo.gif" alt="ZEON Token Savings Demo" style="border-radius: 8px; max-width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+  </a>
+  <br/>
+  <h3><a href="#">Try the Live Playground & Token Calculator</a></h3>
+  <br/>
 </div>
 
 ---
