@@ -118,6 +118,12 @@ class Parser:
         self._skip_newlines()
         tok1 = self.peek()
         if tok1.type == '[':
+            # Check if this is the root array marker `[]` on its own line
+            if (self.pos + 1 < len(self.tokens)
+                    and self.tokens[self.pos + 1].type == ']'
+                    and (self.pos + 2 >= len(self.tokens)
+                         or self.tokens[self.pos + 2].type in ('NEWLINE', 'EOF'))):
+                return self.parse_root_tabular()
             return self.parse_list()
         return self.parse_dict()
 
@@ -373,6 +379,126 @@ class Parser:
         if is_keyed_tabular:
             return res
         return res if array_depth > 0 else res[0]
+
+    def parse_root_tabular(self):
+        """Parse a root-level tabular array introduced by the [] marker.
+
+        Syntax::
+
+            []
+              col1 col2
+              val1 val2
+              val3 val4
+        """
+        self.consume('[')  # consume '['
+        self.consume(']')  # consume ']'
+        self._skip_newlines()
+
+        if self.peek().type == 'EOF':
+            return []
+
+        if self.peek().type == 'INDENT':
+            self.consume('INDENT')
+
+        # Read header
+        headers = []
+        while self.peek().type not in ('NEWLINE', 'EOF', 'DEDENT'):
+            key_tok = self.peek()
+            if key_tok.type not in ('IDENTIFIER', 'NUMBER', 'STRING'):
+                raise ValueError(
+                    f"Expected header key, got {key_tok.type} at line {key_tok.line}"
+                )
+            self.consume()
+            col_key = str(key_tok.value)
+
+            self._skip_key_annotation()
+
+            while self.peek().type == '[':
+                if (self.pos + 1 < len(self.tokens)
+                        and self.tokens[self.pos + 1].type == ']'):
+                    self.consume('['); self.consume(']')
+                else:
+                    break
+
+            while self.peek().type == '(':
+                if (self.pos + 1 < len(self.tokens)
+                        and self.tokens[self.pos + 1].type == ')'):
+                    self.consume('('); self.consume(')')
+                else:
+                    break
+
+            if self.peek().type == '(':
+                self.consume('(')
+                sub_keys = []
+                while self.peek().type not in (')', 'NEWLINE', 'EOF'):
+                    sub_key_tok = self.peek()
+                    if sub_key_tok.type not in ('IDENTIFIER', 'NUMBER', 'STRING'):
+                        raise ValueError(
+                            f"Expected sub header key, got {sub_key_tok.type}"
+                        )
+                    self.consume()
+                    sub_key_str = str(sub_key_tok.value)
+                    self._skip_key_annotation()
+                    sub_keys.append(sub_key_str)
+                self.consume(')')
+                headers.append((col_key, sub_keys))
+            else:
+                headers.append(col_key)
+
+        if self.peek().type == 'NEWLINE':
+            self.consume('NEWLINE')
+
+        res = []
+        while self.peek().type not in ('DEDENT', 'EOF'):
+            self._skip_newlines()
+            if self.peek().type in ('DEDENT', 'EOF'):
+                break
+
+            row_dict = {}
+            for header in headers:
+                if isinstance(header, tuple):
+                    main_k, sub_k = header
+                    val = self.parse_value()
+                    if isinstance(val, (tuple, list)):
+                        row_dict[main_k] = dict(zip(sub_k, val))
+                    elif isinstance(val, dict):
+                        sub_dict = val.copy()
+                        for i, sk in enumerate(sub_k):
+                            str_i = str(i)
+                            if str_i in sub_dict:
+                                sub_dict[sk] = sub_dict.pop(str_i)
+                        row_dict[main_k] = sub_dict
+                    else:
+                        raise ValueError(
+                            f"Expected tuple/list or dict for {main_k} at line {self.peek().line}"
+                        )
+                else:
+                    row_dict[header] = self.parse_value()
+
+            # Inline dynamic properties at the end of the row
+            while self.peek().type not in ('NEWLINE', 'EOF', 'DEDENT'):
+                key_tok = self.peek()
+                if key_tok.type not in ('IDENTIFIER', 'NUMBER', 'STRING'):
+                    raise ValueError(
+                        f"Expected dynamic property key, got {key_tok.type} at line {key_tok.line}"
+                    )
+                self.consume()
+                key = str(key_tok.value)
+                self._skip_key_annotation()
+                if self.peek().type == '=':
+                    self.consume('=')
+                    row_dict[key] = self.parse_value()
+                else:
+                    raise ValueError(
+                        f"Expected '=' after dynamic property '{key}' at line {key_tok.line}"
+                    )
+
+            res.append(row_dict)
+
+        if self.peek().type == 'DEDENT':
+            self.consume('DEDENT')
+
+        return res
 
     def parse_list(self):
         self.consume('[')

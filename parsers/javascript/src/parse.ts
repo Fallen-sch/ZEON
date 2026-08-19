@@ -139,6 +139,11 @@ export class Parser {
         this._skipNewlines();
         const tok1 = this.peek();
         if (tok1.type === '[') {
+            if (this.pos + 1 < this.tokens.length && this.tokens[this.pos + 1].type === ']') {
+                if (this.pos + 2 >= this.tokens.length || ['NEWLINE', 'EOF'].includes(this.tokens[this.pos + 2].type)) {
+                    return this.parseRootTabular();
+                }
+            }
             return this.parseList();
         }
         return this.parseDict();
@@ -431,6 +436,130 @@ export class Parser {
         this.consume('DEDENT');
         if (isKeyedTabular) return res;
         return arrayDepth > 0 ? res : res[0];
+    }
+
+    private parseRootTabular(): any[] {
+        this.consume('[');
+        this.consume(']');
+        this._skipNewlines();
+
+        if (this.peek().type === 'EOF') {
+            return [];
+        }
+
+        if (this.peek().type === 'INDENT') {
+            this.consume('INDENT');
+        }
+
+        const headers: any[] = [];
+        while (!['NEWLINE', 'EOF', 'DEDENT'].includes(this.peek().type)) {
+            const keyTok = this.peek();
+            if (!['IDENTIFIER', 'NUMBER', 'STRING'].includes(keyTok.type)) {
+                throw new Error(`Expected header key, got ${keyTok.type} at line ${keyTok.line}`);
+            }
+            this.consume();
+            const colKey = String(keyTok.value);
+
+            this._skipKeyAnnotation();
+
+            while (this.peek().type === '[') {
+                if (this.pos + 1 < this.tokens.length && this.tokens[this.pos + 1].type === ']') {
+                    this.consume('[');
+                    this.consume(']');
+                } else break;
+            }
+
+            while (this.peek().type === '(') {
+                if (this.pos + 1 < this.tokens.length && this.tokens[this.pos + 1].type === ')') {
+                    this.consume('(');
+                    this.consume(')');
+                } else break;
+            }
+
+            if (this.peek().type === '(') {
+                this.consume('(');
+                const subKeys: string[] = [];
+                while (![')', 'NEWLINE', 'EOF'].includes(this.peek().type)) {
+                    const subKeyTok = this.peek();
+                    if (!['IDENTIFIER', 'NUMBER', 'STRING'].includes(subKeyTok.type)) {
+                        throw new Error(`Expected sub header key, got ${subKeyTok.type}`);
+                    }
+                    this.consume();
+                    subKeys.push(String(subKeyTok.value));
+                    this._skipKeyAnnotation();
+                }
+                this.consume(')');
+                headers.push([colKey, subKeys]);
+            } else {
+                headers.push(colKey);
+            }
+        }
+
+        if (this.peek().type === 'NEWLINE') {
+            this.consume('NEWLINE');
+        }
+
+        const res: any[] = [];
+        while (!['DEDENT', 'EOF'].includes(this.peek().type)) {
+            this._skipNewlines();
+            if (['DEDENT', 'EOF'].includes(this.peek().type)) break;
+
+            const rowDict: any = {};
+            for (const header of headers) {
+                if (Array.isArray(header)) {
+                    const mainK = header[0];
+                    const subK = header[1];
+                    const val = this.parseValue();
+                    if (Array.isArray(val)) {
+                        const subDict: any = {};
+                        for (let i = 0; i < subK.length; i++) {
+                            subDict[subK[i]] = val[i];
+                        }
+                        rowDict[mainK] = subDict;
+                    } else if (typeof val === 'object' && val !== null) {
+                        const subDict: any = { ...val };
+                        for (let i = 0; i < subK.length; i++) {
+                            const strI = String(i);
+                            if (strI in subDict) {
+                                subDict[subK[i]] = subDict[strI];
+                                delete subDict[strI];
+                            }
+                        }
+                        rowDict[mainK] = subDict;
+                    } else {
+                        throw new Error(`Expected array or dict for ${mainK} at line ${this.peek().line}`);
+                    }
+                } else {
+                    rowDict[header] = this.parseValue();
+                }
+            }
+
+            while (!['NEWLINE', 'EOF', 'DEDENT'].includes(this.peek().type)) {
+                const keyTok = this.peek();
+                if (!['IDENTIFIER', 'NUMBER', 'STRING'].includes(keyTok.type)) {
+                    throw new Error(`Expected dynamic property key, got ${keyTok.type} at line ${keyTok.line}`);
+                }
+                this.consume();
+                const key = String(keyTok.value);
+
+                this._skipKeyAnnotation();
+
+                if (this.peek().type === '=') {
+                    this.consume('=');
+                    rowDict[key] = this.parseValue();
+                } else {
+                    throw new Error(`Expected '=' after dynamic property '${key}' at line ${keyTok.line}`);
+                }
+            }
+
+            res.push(rowDict);
+        }
+
+        if (this.peek().type === 'DEDENT') {
+            this.consume('DEDENT');
+        }
+
+        return res;
     }
 
     private parseList(): any[] {

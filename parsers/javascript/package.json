@@ -1,6 +1,6 @@
 {
   "name": "zeon-format",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Official JavaScript/TypeScript parser for the ZEON data configuration language.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

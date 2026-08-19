@@ -1,3 +1,4 @@
+import { describe, expect, test } from '@jest/globals';
 import { dumps } from '../src/stringify';
 import { convert } from '../src/converter';
 
@@ -20,6 +21,18 @@ describe('Stringifier API', () => {
         expect(result).toBe(`config
   timeout retries
   30 5`);
+    });
+
+    test('dumps root level array with [] marker', () => {
+        const input = [
+            { id: 1, name: "Alice" },
+            { id: 2, name: "Bob" }
+        ];
+        const result = dumps(input);
+        expect(result).toBe(`[]
+  id name
+  1 Alice
+  2 Bob`);
     });
 
     test('Converter toZeon', () => {

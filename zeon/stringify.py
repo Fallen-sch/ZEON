@@ -270,9 +270,34 @@ def _dumps(obj, indent_level=0) -> str:
         return "\n".join(lines)
         
     elif isinstance(obj, list):
+        # Try tabular format with the root [] marker
+        if obj and _get_hybrid_headers(obj):
+            headers = _get_hybrid_headers(obj)
+            header_strs = []
+            for h in headers:
+                if isinstance(h, tuple):
+                    header_strs.append(_format_header_tuple(h))
+                else:
+                    first_val = obj[0].get(h)
+                    if isinstance(first_val, dict):
+                        header_strs.append(f"{h}()")
+                    elif isinstance(first_val, list):
+                        header_strs.append(f"{h}[]")
+                    else:
+                        header_strs.append(str(h))
+            lines = ["[]", "  " + " ".join(header_strs)]
+            for item in obj:
+                vals_str = " ".join(_format_value_for_header(item, h) for h in headers)
+                header_keys_set = set(h[0] if isinstance(h, tuple) else h for h in headers)
+                extra_keys = [ek for ek in item.keys() if ek not in header_keys_set]
+                if extra_keys:
+                    vals_str += f" {_dumps_inline({ek: item[ek] for ek in extra_keys})}"
+                lines.append("  " + vals_str)
+            return "\n".join(lines)
         return indent_str + _dumps_inline(obj)
     else:
         return indent_str + _dump_primitive(obj)
+
 
 def dumps(obj) -> str:
     return _dumps(obj, 0)

@@ -331,6 +331,39 @@ function _dumps(obj: any, indentLevel: number = 0): string {
         return lines.join("\n");
         
     } else if (Array.isArray(obj)) {
+        if (obj.length > 0 && _getHybridHeaders(obj).length > 0) {
+            const headers = _getHybridHeaders(obj);
+            const headerStrs: string[] = [];
+            for (const h of headers) {
+                if (Array.isArray(h) && h.length === 2) {
+                    headerStrs.push(_formatHeaderTuple(h));
+                } else {
+                    const firstVal = obj[0][h];
+                    if (isObject(firstVal)) {
+                        headerStrs.push(`${h}()`);
+                    } else if (Array.isArray(firstVal)) {
+                        headerStrs.push(`${h}[]`);
+                    } else {
+                        headerStrs.push(String(h));
+                    }
+                }
+            }
+            const lines = ["[]", "  " + headerStrs.join(" ")];
+            for (const item of obj) {
+                let valsStr = headers.map(h => _formatValueForHeader(item, h)).join(" ");
+                const headerKeysSet = new Set(headers.map(h => Array.isArray(h) && h.length === 2 ? h[0] : h));
+                const extraKeys = Object.keys(item).filter(ek => !headerKeysSet.has(ek));
+                if (extraKeys.length > 0) {
+                    const extraDict: any = {};
+                    for (const ek of extraKeys) {
+                        extraDict[ek] = item[ek];
+                    }
+                    valsStr += ` ${_dumpsInline(extraDict)}`;
+                }
+                lines.push("  " + valsStr);
+            }
+            return lines.join("\n");
+        }
         return indentStr + _dumpsInline(obj);
     } else {
         return indentStr + _dumpPrimitive(obj);

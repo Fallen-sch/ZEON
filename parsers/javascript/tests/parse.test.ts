@@ -1,3 +1,4 @@
+import { describe, expect, test } from '@jest/globals';
 import { parse } from '../src/parse';
 
 describe('ZEON Parser', () => {
@@ -29,6 +30,19 @@ users[]
                 { id: 2, name: "bob" }
             ]
         });
+    });
+
+    test('parses root level array with [] marker', () => {
+        const input = `[]
+  id name
+  1 Alice
+  2 Bob
+`;
+        const result = parse(input);
+        expect(result).toEqual([
+            { id: 1, name: "Alice" },
+            { id: 2, name: "Bob" }
+        ]);
     });
 
     test('parses inline dictionaries', () => {

@@ -8,6 +8,7 @@
     <a href="https://www.npmjs.com/package/zeon-format"><img src="https://img.shields.io/npm/v/zeon-format?color=38bdf8&label=NPM" alt="NPM Version" /></a>
     <a href="https://marketplace.visualstudio.com/items?itemName=FallenBR.zeon-vscode"><img src="https://img.shields.io/badge/VS%20Code-v1.0.0-0ea5e9?logo=visualstudiocode" alt="VS Code Extension" /></a>
     <a href="https://open-vsx.org/extension/FallenBR/zeon-vscode"><img src="https://img.shields.io/open-vsx/v/FallenBR/zeon-vscode?color=8b5cf6&label=Open%20VSX" alt="Open VSX Registry" /></a>
+    <a href="tests/README.md"><img src="https://img.shields.io/badge/tests-76%20passed-brightgreen.svg" alt="Tests" /></a>
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" />
   </p>
 </div>
@@ -159,6 +160,15 @@ users[]
   id role
   1 admin
   2 guest
+```
+
+**Root-Level Arrays:** If your entire file/payload is just a list of objects, use the `[]` marker on the first line:
+
+```
+[]
+  id name
+  1 Alice
+  2 Bob
 ```
 
 ### 4. Nested Sub-Objects (Tuple Headers)
