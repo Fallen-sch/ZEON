@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="vscode-zeon/icons/zeon-logo.png" alt="Logo ZEON" width="120" />
+  <img src="vscode-zeon/icons/zeon-logo.png" alt="ZEON Logo" width="120" />
   <h1>ZEON</h1>
   <p><strong>Zero-overhead Encoding Object Notation</strong></p>
   <p>Um formato de serialização tabular projetado para máxima eficiência de tokens LLM.</p>
@@ -326,6 +326,8 @@ Esse simples exemplo é suficiente para que GPT-4, Claude e Gemini consigam gera
 ## Benchmarks de Desempenho
 
 ![Economia no Ecossistema](vscode-zeon/icons/ecosystem-savings.png)
+
+> **Teste você mesmo!** Confira o [Notebook de Benchmark de Tokens](examples/token_savings_benchmark.ipynb) interativo para ver a economia de tokens em dados reais sendo calculada ao vivo com a biblioteca `tiktoken` da OpenAI.
 
 Avaliado em 8 formatos reais de dados usando o tokenizer `cl100k_base` (GPT-4 / tiktoken):
 

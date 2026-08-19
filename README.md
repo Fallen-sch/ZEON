@@ -327,6 +327,8 @@ This single example is sufficient for GPT-4, Claude, and Gemini to generate vali
 
 ![Ecosystem Savings](vscode-zeon/icons/ecosystem-savings.png)
 
+> **Try it yourself!** Check out our interactive [Token Savings Benchmark Notebook](examples/token_savings_benchmark.ipynb) to see real-world token savings calculated live using the OpenAI `tiktoken` library.
+
 Benchmarked against 8 real-world dataset shapes using the `cl100k_base` tokenizer (GPT-4 / tiktoken):
 
 | Dataset | Tabular Eligibility | JSON Compact | YAML | **ZEON** | vs JSON | vs YAML |
