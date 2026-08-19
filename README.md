@@ -2,68 +2,138 @@
   <img src="vscode-zeon/icons/zeon-logo.png" alt="ZEON Logo" width="120" />
   <h1>ZEON</h1>
   <p><strong>Zero-overhead Encoding Object Notation</strong></p>
+  <p>A tabular serialization format designed for maximum LLM token efficiency.</p>
   <p>
-    <a href="https://www.npmjs.com/package/zeon-format"><img src="https://img.shields.io/npm/v/zeon-format?color=38bdf8&label=NPM" alt="NPM Version" /></a>
     <a href="https://pypi.org/project/zeon-format/"><img src="https://img.shields.io/pypi/v/zeon-format?color=ffd343&label=PyPI" alt="PyPI Version" /></a>
+    <a href="https://www.npmjs.com/package/zeon-format"><img src="https://img.shields.io/npm/v/zeon-format?color=38bdf8&label=NPM" alt="NPM Version" /></a>
     <a href="https://marketplace.visualstudio.com/items?itemName=FallenBR.zeon-vscode"><img src="https://img.shields.io/badge/VS%20Code-v1.0.0-0ea5e9?logo=visualstudiocode" alt="VS Code Extension" /></a>
     <a href="https://open-vsx.org/extension/FallenBR/zeon-vscode"><img src="https://img.shields.io/open-vsx/v/FallenBR/zeon-vscode?color=8b5cf6&label=Open%20VSX" alt="Open VSX Registry" /></a>
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" />
   </p>
-  <p>A next-generation tabular serialization format designed for maximum LLM token efficiency.</p>
 </div>
-
-ZEON is a whitespace-sensitive data serialization language that completely reimagines how structured data is presented to Large Language Models (LLMs). 
-
-Heavily inspired by Python's clean visual structure and YAML's lightness, ZEON eliminates the most expensive parts of JSON: redundant keys, brackets, and quotes. It introduces a unique "Suffix-driven Tabular Grammar" that achieves extreme token density without sacrificing human readability or parser reliability.
-
-## Table of Contents
-- [The Token Problem](#the-token-problem)
-- [The ZEON Solution](#the-zeon-solution)
-- [Syntax Guide](#syntax-guide)
-- [Performance Benchmarks](#performance-benchmarks)
-- [CLI Usage](#cli-usage)
-- [Installation](#installation)
 
 ---
 
-## The Token Problem
+ZEON is a whitespace-sensitive serialization language that eliminates the most token-expensive parts of JSON — redundant keys, brackets, and commas — through a **Suffix-driven Tabular Grammar**. Declare your schema once, stream your data cleanly below it.
 
-In modern AI development, feeding context to LLMs via JSON payloads is incredibly expensive. JSON was built for machines, not for LLM tokenizers. 
+## Table of Contents
 
-When dealing with arrays of objects (like a list of 1,000 products), JSON forces you to repeat the keys `"id"`, `"name"`, `"price"` 1,000 times. Every repeated key, colon, and comma consumes precious tokens, slowing down inference and increasing API costs.
+- [Why ZEON](#why-zeon)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Syntax Guide](#syntax-guide)
+- [Using ZEON with LLMs](#using-zeon-with-llms)
+- [Performance Benchmarks](#performance-benchmarks)
+- [Developer Tooling](#developer-tooling)
+- [CLI Reference](#cli-reference)
 
-## The ZEON Solution
+---
 
-ZEON solves this through **Tabular Indentation**. By using special suffixes directly on the keys, you tell the parser exactly how to read the indented block below it. The header is declared only once, and the data flows cleanly underneath.
+## Why ZEON
 
-### Example comparison
+When you feed structured data to an LLM, JSON forces you to repeat every key on every row. A list of 1,000 products repeats `"id"`, `"name"`, `"price"` — and their surrounding quotes, colons, and commas — 1,000 times each. Every one of those characters costs tokens.
 
-JSON Payload:
+ZEON solves this with **tabular indentation**: declare the header once, list the rows below.
+
+**JSON** — 1,100 tokens (~$0.0110 per call with GPT-4o):
 ```json
-"items": [
-  {"id": "SKU-100", "qty": 1, "price": 150.0},
-  {"id": "SKU-205", "qty": 2, "price": 45.5}
+"products": [
+  {"id": "SKU-001", "name": "Wireless Headphones", "category": "electronics", "price": 149.99, "in_stock": true},
+  {"id": "SKU-002", "name": "Mechanical Keyboard", "category": "electronics", "price": 89.90, "in_stock": true},
+  {"id": "SKU-003", "name": "USB-C Hub", "category": "accessories", "price": 34.50, "in_stock": false},
+  {"id": "SKU-004", "name": "Monitor Stand", "category": "accessories", "price": 45.00, "in_stock": true},
+  {"id": "SKU-005", "name": "Webcam 4K", "category": "electronics", "price": 119.00, "in_stock": true},
+  {"id": "SKU-006", "name": "Desk Lamp", "category": "furniture", "price": 29.99, "in_stock": true},
+  {"id": "SKU-007", "name": "Laptop Sleeve", "category": "accessories", "price": 19.90, "in_stock": false},
+  {"id": "SKU-008", "name": "Ergonomic Mouse", "category": "electronics", "price": 55.00, "in_stock": true},
+  {"id": "SKU-009", "name": "Cable Organizer", "category": "accessories", "price": 12.50, "in_stock": true},
+  {"id": "SKU-010", "name": "Portable SSD", "category": "electronics", "price": 79.99, "in_stock": true}
 ]
 ```
 
-ZEON Equivalent:
-```python
-items[]
-  id qty price
-  SKU-100 1 150.0
-  SKU-205 2 45.5
+**ZEON** — 640 tokens (~$0.0064 per call with GPT-4o) — **42% fewer tokens, identical data:**
 ```
-By declaring `items[]`, ZEON understands the first indented line is the header, and maps all subsequent lines to those keys.
+products[]
+  id name category price in_stock
+  SKU-001 "Wireless Headphones" electronics 149.99 True
+  SKU-002 "Mechanical Keyboard" electronics 89.90 True
+  SKU-003 "USB-C Hub" accessories 34.50 False
+  SKU-004 "Monitor Stand" accessories 45.00 True
+  SKU-005 "Webcam 4K" electronics 119.00 True
+  SKU-006 "Desk Lamp" furniture 29.99 True
+  SKU-007 "Laptop Sleeve" accessories 19.90 False
+  SKU-008 "Ergonomic Mouse" electronics 55.00 True
+  SKU-009 "Cable Organizer" accessories 12.50 True
+  SKU-010 "Portable SSD" electronics 79.99 True
+```
+
+At scale (1,000 products), ZEON saves ~46,000 tokens per call — roughly **$0.46 per call, or $460 per 1,000 calls**.
+
+---
+
+## Quick Start
+
+## Installation
+
+### Python
+
+```bash
+pip install zeon-format
+```
+
+```python
+import zeon
+
+# Parse and serialize
+data = zeon.loads(text)
+zeon_text = zeon.dumps(data)
+
+# String conversion
+json_text  = zeon.convert(zeon_text).to_json()
+yaml_text  = zeon.convert(zeon_text).to_yaml()
+zeon_text  = zeon.convert(json_text).to_zeon()
+
+# File conversion — saves alongside the original by default
+zeon.convert("path/to/data.zeon").to_json("data.json")
+zeon.convert("path/to/data.json").to_zeon("data.zeon")
+
+# Or specify a custom output path
+zeon.convert("path/to/data.json").to_zeon("exports/my_data.zeon")
+```
+
+### Node.js / TypeScript
+
+```bash
+npm install zeon-parser
+```
+
+```typescript
+import { parse } from 'zeon-parser';
+
+const result = parse(`
+project_name="ZEON"
+config
+  timeout retries
+  30 5
+`);
+
+console.log(result.project_name); // ZEON
+console.log(result.config.timeout); // 30
+```
+
+> Full NPM documentation: [parsers/javascript/README.md](parsers/javascript/README.md)
 
 ---
 
 ## Syntax Guide
 
-ZEON uses pure spaces for separation and Python-like primitive types (`True`, `False`, `None`).
+ZEON uses spaces for separation and Python-style literals (`True`, `False`, `None`).
 
 ### 1. Primitive Key-Value Pairs
-Standard assignments use `=`. Unquoted strings are natively supported for ISO dates and identifiers.
-```python
+
+Standard assignments use `=`. ISO dates and identifiers are natively supported without quotes.
+
+```
 order_id=ORD-99321
 is_active=True
 deleted_at=None
@@ -71,43 +141,51 @@ created_at=2026-08-16T14:30:00Z
 ```
 
 ### 2. Flat Objects
+
 Objects use indentation. No `{}` required.
-```python
+
+```
 customer
   id name email
   8472 "Maria Silva" maria@example.com
 ```
 
 ### 3. Arrays of Objects (Tabular Format)
-Use the `[]` suffix. The first line is the header.
-```python
+
+Use the `[]` suffix. The first indented line is the header; all subsequent lines are rows.
+
+```
 users[]
   id role
   1 admin
   2 guest
 ```
 
-### 4. Nested Tuples and Dynamic Attributes (Mixed Kwargs)
-If an object contains a sub-object uniformly, you can declare it in the header using `key(sub1 sub2)` and map values positionally using `(val1 val2)`.
-```python
+### 4. Nested Sub-Objects (Tuple Headers)
+
+Declare a nested object in the header using `key(sub1 sub2)` and map values positionally.
+
+```
 products[]
   id dimensions(weight unit)
   1 (1.2 kg)
 ```
-**Mixed Kwargs:** You can dynamically append extra keyed attributes to a tuple using `key=value` format at the end. The positional elements map to the header, and any extra key-value pairs are seamlessly merged into the resulting JSON object:
-```python
+
+You can also append extra key-value pairs inline at the end of any row:
+
+```
 items[]
   name attributes(damage defense)
   sword (10 10 extra_fire=5)
 ```
-This gracefully parses to `{"damage": 10, "defense": 10, "extra_fire": 5}`.
 
+Parses to `{"damage": 10, "defense": 10, "extra_fire": 5}`.
 
 ### 5. N-Dimensional Matrices
-Use the `[2]` or `[3]` suffixes for pure multidimensional arrays with no headers (e.g., coordinates, tensor data). 
-For 3D Matrices (`[3]`), layers are separated by a double newline.
 
-```python
+Use `[2]` for 2D arrays and `[3]` for 3D arrays (layers separated by a blank line).
+
+```
 shipping_route[2]
   -23.5505 -46.6333
   -23.5501 -46.6341
@@ -120,22 +198,41 @@ cube_data[3]
   0 0
 ```
 
-### 6. Visual Annotations (Ignored by Parser)
-ZEON allows human-friendly annotations to enhance readability without affecting the actual parsed JSON data.
-- **Suffixes `()` and `[]` on columns:** Mark complex columns explicitly.
-- **Inline Annotations `[text]`:** Describe what a key belongs to.
+### 6. Keyed Tabular Format (Dict of Objects)
 
-```python
-users[]
-  id[Number] name preferences(theme) aliases[]
-  1 Maria (light) [mary mah]
+Use the `{}` suffix for dictionaries of uniform objects. The first column becomes the key.
+
 ```
-The parser completely ignores `()`, `[]` and `[Number]`, resulting in pristine JSON keys. The ZEON stringifier automatically generates `()` and `[]` for deep objects and arrays.
+environments{}
+  region replicas debug
+  production eu-central-1 6 False
+  staging eu-central-1 2 True
+```
 
-### 7. Multiline Objects and Arrays
-Unlike JSON which requires commas, ZEON allows beautiful multiline formatting inside `(...)` (dictionaries) and `[...]` (arrays) while natively ignoring indentation and line breaks, exactly like Python.
+For dictionaries of primitive arrays, use `{[]}` and skip the header row entirely:
 
-```python
+```
+user_roles{[]}
+  "admin" 1 2 3
+  "guest" 4 5
+```
+
+### 7. Hybrid Tabular-Inline (Semi-Uniform Data)
+
+For arrays where rows share some keys but not all, ZEON uses the common keys as the header and appends the extra properties inline at the end of each row.
+
+```
+event_logs[]
+  timestamp level message
+  2026-08-17T10:00:00Z INFO "User logged in" user_id=405
+  2026-08-17T10:01:00Z ERROR "DB Timeout" retry_count=3 context=(db=users)
+```
+
+### 8. Multiline Inline Objects and Arrays
+
+`(...)` for objects, `[...]` for arrays. Indentation and line breaks inside them are ignored.
+
+```
 config=(
   db_pool=(
     host=localhost
@@ -152,217 +249,121 @@ config=(
 )
 ```
 
-### 8. Hybrid Tabular-Inline
-If an array contains semi-uniform objects (e.g., event logs where some rows have extra properties), ZEON finds the intersection of common keys for the header, and appends the extra properties inline at the end of each row.
+### 9. Mixed Data Fallback
 
-```python
-event_logs[]
-  timestamp level message
-  2026-08-17T10:00:00Z INFO "User logged in" user_id=405
-  2026-08-17T10:01:00Z ERROR "DB Timeout" retry_count=3 context=(db=users)
+For irregular arrays with no common schema, ZEON uses inline notation:
+
 ```
-This ensures high token savings even for messy data.
-
-### 9. Keyed Tabular Format
-When dealing with dictionaries of uniform objects (like feature flags or environment configs), ZEON uses the `{}` suffix. The first value of each row becomes the dictionary key, eliminating the need to repeat nested keys.
-
-```python
-environments{}
-  region replicas debug
-  production eu-central-1 6 False
-  staging eu-central-1 2 True
-```
-
-If your dictionary values are simply arrays (lists of primitives), you can use the **Dictionary of Arrays** suffix `{[]}` to completely skip the header row:
-```python
-user_roles{[]}
-  "admin" 1 2 3
-  "guest" 4 5
-```
-
-### 10. Mixed Data Fallback
-If an array contains irregular or heavily nested mixed types where no common header exists, ZEON gracefully falls back to an "inline" format.
-
-JSON:
-```json
-"mixed_data": [
-  1,
-  "hello",
-  {"flag": true},
-  [2, 3]
-]
-```
-
-ZEON Equivalent:
-```python
 mixed_data=[1 "hello" (flag=True) [2 3]]
 ```
-Notice how `[]` brackets are used for arrays and `()` for nested objects (`flag=True`). This allows you to represent any deeply nested chaos securely, retaining the exact structure of JSON while stripping away commas and quotes.
+
+`[]` for arrays, `()` for inline objects — no commas, no quotes where unnecessary.
+
+### 10. Visual Annotations (Ignored by Parser)
+
+Add `[label]` annotations to column headers for human readability. The parser ignores them completely.
+
+```
+users[]
+  id[Number] name preferences(theme) aliases[]
+  1 Maria (light) [mary mah]
+```
 
 ---
 
-## Teaching ZEON to your AI (System Prompt)
+## Using ZEON with LLMs
 
-Since ZEON is an innovative format, Large Language Models (LLMs) like GPT-4 or Claude might need a brief instruction in their **System Prompt** to generate responses perfectly in the tabular format.
+Include a brief reference block in your **System Prompt** so the model knows how to generate ZEON output.
 
-Whenever you ask the AI to return structured data, include the following block in your prompt:
+> **Does the reference block eat into my savings?**
+> The block below costs ~120 tokens — a fixed, one-time overhead recovered after just 4–5 data rows. Any response with 10+ rows is already net-positive. The more rows, the greater the gain.
 
 ```text
-Please return the data strictly in ZEON format.
-To learn how ZEON works, study the reference file below. It uses tabular indentation, suffixes like `[]` for arrays, and completely drops the use of JSON braces {} and commas.
+Return all structured data strictly in ZEON format.
+ZEON uses tabular indentation: declare a header once, list data below it.
+Suffixes: [] = array of objects, {} = keyed dict, () = inline object, [2]/[3] = matrices.
+No JSON braces, no commas, no repeated keys.
 
 <reference.zeon>
 project_name="ZEON Demo"
 is_active=True
 
-# Flat objects use simple indentation
+# Flat objects use indentation
 config
   timeout retries
   30 5
 
-# Tabular arrays use the [] suffix
+# Tabular arrays: first indented line is the header
 users[]
   id name preferences(theme)
   1 "Alice" (dark)
   2 "Bob" (light)
 
-# Dynamic extra attributes can be added inline at the end of the row
+# Extra dynamic attributes go inline at the end of the row
 logs[]
   level message
   INFO "System started" timestamp=2026-08-18T10:00:00Z
   ERROR "DB Failed" retry=True
-
-# 3D Matrices use the [3] suffix and double line breaks
-matrix_3d[3]
-  1 0
-  0 1
-
-  1 1
-  1 1
 </reference.zeon>
 ```
-Providing this single, generic example as context (Few-Shot Prompting) is enough for any modern AI to natively understand the mechanics and instantly slash your token usage.
 
-**Pro Tip:** To use ZEON in projects with highly complex data structures, the best approach is to translate one of your own JSON files to ZEON (using our CLI or parser) and then provide it to the AI as the reference example!
+This single example is sufficient for GPT-4, Claude, and Gemini to generate valid ZEON for any data shape.
+
+> **Pro Tip:** For complex schemas, convert one of your own JSON files first: `zeon convert data.json --print`. Use that output as the reference — the model will replicate your exact schema perfectly.
 
 ---
 
 ## Performance Benchmarks
 
-ZEON shines on uniform, list-heavy data structures. We ran our official Python implementation against 8 representative real-world dataset shapes.
+![Ecosystem Savings](vscode-zeon/icons/ecosystem-savings.png)
 
-**Results (Tokenizer: `cl100k_base` — GPT-4 / tiktoken):**
+Benchmarked against 8 real-world dataset shapes using the `cl100k_base` tokenizer (GPT-4 / tiktoken):
 
 | Dataset | Tabular Eligibility | JSON Compact | YAML | **ZEON** | vs JSON | vs YAML |
 | :--- | :---: | ---: | ---: | ---: | ---: | ---: |
-| Employee Records (100, uniform) | 100% | 2,804 | 3,702 | **1,709** | `-39.1%` | `-53.8%` |
-| GitHub Repositories (30, uniform) | 100% | 2,083 | 2,461 | **1,188** | `-43.0%` | `-51.7%` |
-| Time-series Analytics (60, uniform) | 100% | 2,332 | 2,870 | **1,498** | `-35.8%` | `-47.8%` |
-| Contacts with nested address (50) | 100% | 2,603 | 3,302 | **1,716** | `-34.1%` | `-48.0%` |
-| E-commerce Orders (50, nested) | 33% | 4,933 | 6,220 | **3,581** | `-27.4%` | `-42.4%` |
-| Feature Flags (40, keyed map) | 100% | 825 | 963 | **487** | `-41.0%` | `-49.4%` |
-| Semi-uniform Event Logs (75, mixed) | 50% | 2,944 | 3,617 | **2,303** | `-21.8%` | `-36.3%` |
+| Employee Records (100 rows, flat) | 100% | 2,804 | 3,702 | **1,709** | `-39.1%` | `-53.8%` |
+| GitHub Repositories (30 rows, flat) | 100% | 2,083 | 2,461 | **1,188** | `-43.0%` | `-51.7%` |
+| Time-series Analytics (60 rows, flat) | 100% | 2,332 | 2,870 | **1,498** | `-35.8%` | `-47.8%` |
+| Contacts with nested address (50 rows) | 100% | 2,603 | 3,302 | **1,716** | `-34.1%` | `-48.0%` |
+| E-commerce Orders (50 rows, nested) | 33% | 4,933 | 6,220 | **3,581** | `-27.4%` | `-42.4%` |
+| Feature Flags (40 keys, keyed map) | 100% | 825 | 963 | **487** | `-41.0%` | `-49.4%` |
+| Semi-uniform Event Logs (75 rows) | 50% | 2,944 | 3,617 | **2,303** | `-21.8%` | `-36.3%` |
 | Deeply Nested Config (worst case) | 0% | 137 | 173 | **105** | `-23.4%` | `-39.3%` |
-| **TOTAL (all 8 datasets)** | — | **18,661** | **23,308** | **12,587** | **`-32.5%`** | **`-46.0%`** |
+| **TOTAL** | — | **18,661** | **23,308** | **12,587** | **`-32.5%`** | **`-46.0%`** |
 
-> **Note:** For a detailed comparison between ZEON and other LLM-oriented formats (like TOON), please refer to our [BENCHMARKS.md](BENCHMARKS.md) file.
-
-*On highly uniform, list-heavy data (100% tabular eligibility), ZEON achieves up to **-43%** token reduction against minified JSON, and over **-53%** against YAML.*
-*Even on deeply nested or semi-uniform structures, ZEON never uses **more** tokens than YAML.*
-
-This translates to significantly increased effective context window for your LLM applications, directly reducing API inference costs.
+On 100% tabular data, ZEON achieves up to **-43%** vs minified JSON and **-53%** vs YAML. Even in the worst-case deeply-nested scenario, ZEON never uses more tokens than JSON.
 
 ---
 
-## Developer Experience (VSCode Extension)
+## Developer Tooling
 
-Although writing highly complex or deeply nested structures in a whitespace-sensitive format might seem challenging at first, you don't have to do it in the dark! You can count on our **Official VSCode Extension** to do the heavy lifting for you.
+The **Official VS Code Extension** provides a full editing experience for `.zeon` files:
 
-The ZEON extension provides a world-class developer experience:
-- **Real-time Linter**: Instantly catches syntax errors, invalid indentation, or incorrect suffixes as you type.
-- **Syntax Highlighting**: Beautiful colorization for matrices, tables, primitives, and inline attributes.
-- **Interactive Live Preview**: Opens a side-by-side visual preview that renders your `.zeon` file as an interactive grid! It allows you to collapse large tables, expand long text cells, and even **edit values directly in the visual interface** (pressing `Ctrl+S` updates your file instantly).
-- **Automatic Conversion (CLI)**: Remember that you are never forced to write ZEON from scratch. Since the format is 100% bidirectionally compatible with JSON, you can use our CLI tool to automatically translate any existing JSON or YAML file into ZEON instantly!
+- **Syntax Highlighting** — colorization for tables, matrices, primitives, and inline objects.
+- **Real-time Linter** — catches syntax errors and incorrect suffixes as you type.
+- **Interactive Live Preview** — renders your file as a visual grid. Edit values directly in the grid and press `Ctrl+S` to write changes back to the file.
 
-With the extension and the CLI, managing complex LLM payloads becomes as easy and friendly as editing a spreadsheet.
+Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=FallenBR.zeon-vscode) or [Open VSX](https://open-vsx.org/extension/FallenBR/zeon-vscode).
 
 ---
 
-## CLI Usage
+## CLI Reference
 
-ZEON ships with a powerful bidirectional CLI tool to convert your existing datasets between ZEON, JSON and YAML formats.
+Convert between ZEON, JSON, and YAML from the command line:
 
 ```bash
-# Convert JSON or YAML to ZEON
+# JSON / YAML -> ZEON
 zeon convert data.json -> data.zeon
 zeon convert config.yaml -> config.zeon
 
-# Convert ZEON back to JSON or YAML
+# ZEON -> JSON / YAML
 zeon convert data.zeon -> data.json
-zeon convert config.zeon -> config.yaml
+zeon convert data.zeon -> data.yaml
 
-# Print to stdout
-zeon convert data.yaml --print
+# Print to stdout (useful for piping or previewing)
+zeon convert data.json --print
 ```
 
 ---
 
-## Installation
-
-### Python
-ZEON is officially available on PyPI and can be installed via `pip`:
-
-```bash
-pip install zeon-format
-```
-
-To use it in your code:
-```python
-import zeon
-
-# Decode ZEON string to Python Dictionary
-data = zeon.loads(text)
-
-# Encode Python Dictionary to ZEON format
-zeon_text = zeon.dumps(data)
-
-# Direct string conversion
-json_text = zeon.convert(zeon_text).to_json()
-yaml_text = zeon.convert(zeon_text).to_yaml()
-zeon_text = zeon.convert(yaml_text).to_zeon()
-
-# Direct file conversion
-# 1. Provide only the filename to save it automatically in the same directory as the original
-zeon.convert("path/to/data.zeon").to_json("data.json")
-zeon.convert("path/to/data.zeon").to_yaml("data.yaml")
-
-# 2. Or provide a custom path to save it elsewhere
-zeon.convert("path/to/data.zeon").to_json("exports/my_data.json")
-zeon.convert("path/to/data.json").to_zeon("exports/my_data.zeon")
-```
-
-### Node.js / TypeScript
-ZEON is officially available on NPM and can be installed via `npm`. You can read the full NPM documentation at [parsers/javascript](parsers/javascript/README.md).
-
-```bash
-npm install zeon-parser
-```
-
-To use it in your code:
-```typescript
-import { parse } from 'zeon-parser';
-
-const zeonText = `
-project_name="ZEON"
-config
-  timeout retries
-  30 5
-\`;
-
-const result = parse(zeonText);
-console.log(result.project_name); // ZEON
-console.log(result.config.timeout); // 30
-```
-
----
-*ZEON - The future of AI data serialization.*
+*ZEON — Less tokens. Same data. Lower costs.*

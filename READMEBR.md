@@ -249,6 +249,8 @@ Fornecer esse único exemplo genérico como contexto (Few-Shot Prompting) é suf
 
 ## Benchmarks de Desempenho
 
+![Ecosystem Savings](vscode-zeon/icons/ecosystem-savings.png)
+
 O ZEON brilha em estruturas de dados uniformes e baseadas em listas. Rodamos nossa implementacão Python oficial contra 8 formatos de datasets reais e representativos.
 
 **Resultados (Tokenizador: `cl100k_base` — GPT-4 / tiktoken):**

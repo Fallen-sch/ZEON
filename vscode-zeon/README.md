@@ -18,7 +18,7 @@ Official VSCode extension for the [ZEON](https://github.com/Fallen-sch/ZEON) dat
 
 <img src="icons/token-comparison.png" alt="JSON vs ZEON Token Economy Comparison" width="800"/>
 
-ZEON can reduce your LLM payload token usage by up to **76%** compared to standard JSON, while keeping the data perfectly structured for AI consumption.
+ZEON can reduce your LLM payload token usage by up to **56%** compared to standard JSON, while keeping the data perfectly structured for AI consumption.
 
 ## Features
 
