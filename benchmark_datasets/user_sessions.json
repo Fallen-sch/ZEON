@@ -1,0 +1,482 @@
+[
+  {
+    "session": "S1",
+    "duration": 10,
+    "browser": "Chrome",
+    "events": 6
+  },
+  {
+    "session": "S2",
+    "duration": 20,
+    "browser": "Chrome",
+    "events": 7
+  },
+  {
+    "session": "S3",
+    "duration": 30,
+    "browser": "Chrome",
+    "events": 8
+  },
+  {
+    "session": "S4",
+    "duration": 40,
+    "browser": "Chrome",
+    "events": 9
+  },
+  {
+    "session": "S5",
+    "duration": 50,
+    "browser": "Chrome",
+    "events": 10
+  },
+  {
+    "session": "S6",
+    "duration": 60,
+    "browser": "Chrome",
+    "events": 11
+  },
+  {
+    "session": "S7",
+    "duration": 70,
+    "browser": "Chrome",
+    "events": 12
+  },
+  {
+    "session": "S8",
+    "duration": 80,
+    "browser": "Chrome",
+    "events": 13
+  },
+  {
+    "session": "S9",
+    "duration": 90,
+    "browser": "Chrome",
+    "events": 14
+  },
+  {
+    "session": "S10",
+    "duration": 100,
+    "browser": "Chrome",
+    "events": 15
+  },
+  {
+    "session": "S11",
+    "duration": 110,
+    "browser": "Chrome",
+    "events": 16
+  },
+  {
+    "session": "S12",
+    "duration": 120,
+    "browser": "Chrome",
+    "events": 17
+  },
+  {
+    "session": "S13",
+    "duration": 130,
+    "browser": "Chrome",
+    "events": 18
+  },
+  {
+    "session": "S14",
+    "duration": 140,
+    "browser": "Chrome",
+    "events": 19
+  },
+  {
+    "session": "S15",
+    "duration": 150,
+    "browser": "Chrome",
+    "events": 20
+  },
+  {
+    "session": "S16",
+    "duration": 160,
+    "browser": "Chrome",
+    "events": 21
+  },
+  {
+    "session": "S17",
+    "duration": 170,
+    "browser": "Chrome",
+    "events": 22
+  },
+  {
+    "session": "S18",
+    "duration": 180,
+    "browser": "Chrome",
+    "events": 23
+  },
+  {
+    "session": "S19",
+    "duration": 190,
+    "browser": "Chrome",
+    "events": 24
+  },
+  {
+    "session": "S20",
+    "duration": 200,
+    "browser": "Chrome",
+    "events": 25
+  },
+  {
+    "session": "S21",
+    "duration": 210,
+    "browser": "Chrome",
+    "events": 26
+  },
+  {
+    "session": "S22",
+    "duration": 220,
+    "browser": "Chrome",
+    "events": 27
+  },
+  {
+    "session": "S23",
+    "duration": 230,
+    "browser": "Chrome",
+    "events": 28
+  },
+  {
+    "session": "S24",
+    "duration": 240,
+    "browser": "Chrome",
+    "events": 29
+  },
+  {
+    "session": "S25",
+    "duration": 250,
+    "browser": "Chrome",
+    "events": 30
+  },
+  {
+    "session": "S26",
+    "duration": 260,
+    "browser": "Chrome",
+    "events": 31
+  },
+  {
+    "session": "S27",
+    "duration": 270,
+    "browser": "Chrome",
+    "events": 32
+  },
+  {
+    "session": "S28",
+    "duration": 280,
+    "browser": "Chrome",
+    "events": 33
+  },
+  {
+    "session": "S29",
+    "duration": 290,
+    "browser": "Chrome",
+    "events": 34
+  },
+  {
+    "session": "S30",
+    "duration": 300,
+    "browser": "Chrome",
+    "events": 35
+  },
+  {
+    "session": "S31",
+    "duration": 310,
+    "browser": "Chrome",
+    "events": 36
+  },
+  {
+    "session": "S32",
+    "duration": 320,
+    "browser": "Chrome",
+    "events": 37
+  },
+  {
+    "session": "S33",
+    "duration": 330,
+    "browser": "Chrome",
+    "events": 38
+  },
+  {
+    "session": "S34",
+    "duration": 340,
+    "browser": "Chrome",
+    "events": 39
+  },
+  {
+    "session": "S35",
+    "duration": 350,
+    "browser": "Chrome",
+    "events": 40
+  },
+  {
+    "session": "S36",
+    "duration": 360,
+    "browser": "Chrome",
+    "events": 41
+  },
+  {
+    "session": "S37",
+    "duration": 370,
+    "browser": "Chrome",
+    "events": 42
+  },
+  {
+    "session": "S38",
+    "duration": 380,
+    "browser": "Chrome",
+    "events": 43
+  },
+  {
+    "session": "S39",
+    "duration": 390,
+    "browser": "Chrome",
+    "events": 44
+  },
+  {
+    "session": "S40",
+    "duration": 400,
+    "browser": "Chrome",
+    "events": 45
+  },
+  {
+    "session": "S41",
+    "duration": 410,
+    "browser": "Chrome",
+    "events": 46
+  },
+  {
+    "session": "S42",
+    "duration": 420,
+    "browser": "Chrome",
+    "events": 47
+  },
+  {
+    "session": "S43",
+    "duration": 430,
+    "browser": "Chrome",
+    "events": 48
+  },
+  {
+    "session": "S44",
+    "duration": 440,
+    "browser": "Chrome",
+    "events": 49
+  },
+  {
+    "session": "S45",
+    "duration": 450,
+    "browser": "Chrome",
+    "events": 50
+  },
+  {
+    "session": "S46",
+    "duration": 460,
+    "browser": "Chrome",
+    "events": 51
+  },
+  {
+    "session": "S47",
+    "duration": 470,
+    "browser": "Chrome",
+    "events": 52
+  },
+  {
+    "session": "S48",
+    "duration": 480,
+    "browser": "Chrome",
+    "events": 53
+  },
+  {
+    "session": "S49",
+    "duration": 490,
+    "browser": "Chrome",
+    "events": 54
+  },
+  {
+    "session": "S50",
+    "duration": 500,
+    "browser": "Chrome",
+    "events": 55
+  },
+  {
+    "session": "S51",
+    "duration": 510,
+    "browser": "Chrome",
+    "events": 56
+  },
+  {
+    "session": "S52",
+    "duration": 520,
+    "browser": "Chrome",
+    "events": 57
+  },
+  {
+    "session": "S53",
+    "duration": 530,
+    "browser": "Chrome",
+    "events": 58
+  },
+  {
+    "session": "S54",
+    "duration": 540,
+    "browser": "Chrome",
+    "events": 59
+  },
+  {
+    "session": "S55",
+    "duration": 550,
+    "browser": "Chrome",
+    "events": 60
+  },
+  {
+    "session": "S56",
+    "duration": 560,
+    "browser": "Chrome",
+    "events": 61
+  },
+  {
+    "session": "S57",
+    "duration": 570,
+    "browser": "Chrome",
+    "events": 62
+  },
+  {
+    "session": "S58",
+    "duration": 580,
+    "browser": "Chrome",
+    "events": 63
+  },
+  {
+    "session": "S59",
+    "duration": 590,
+    "browser": "Chrome",
+    "events": 64
+  },
+  {
+    "session": "S60",
+    "duration": 600,
+    "browser": "Chrome",
+    "events": 65
+  },
+  {
+    "session": "S61",
+    "duration": 610,
+    "browser": "Chrome",
+    "events": 66
+  },
+  {
+    "session": "S62",
+    "duration": 620,
+    "browser": "Chrome",
+    "events": 67
+  },
+  {
+    "session": "S63",
+    "duration": 630,
+    "browser": "Chrome",
+    "events": 68
+  },
+  {
+    "session": "S64",
+    "duration": 640,
+    "browser": "Chrome",
+    "events": 69
+  },
+  {
+    "session": "S65",
+    "duration": 650,
+    "browser": "Chrome",
+    "events": 70
+  },
+  {
+    "session": "S66",
+    "duration": 660,
+    "browser": "Chrome",
+    "events": 71
+  },
+  {
+    "session": "S67",
+    "duration": 670,
+    "browser": "Chrome",
+    "events": 72
+  },
+  {
+    "session": "S68",
+    "duration": 680,
+    "browser": "Chrome",
+    "events": 73
+  },
+  {
+    "session": "S69",
+    "duration": 690,
+    "browser": "Chrome",
+    "events": 74
+  },
+  {
+    "session": "S70",
+    "duration": 700,
+    "browser": "Chrome",
+    "events": 75
+  },
+  {
+    "session": "S71",
+    "duration": 710,
+    "browser": "Chrome",
+    "events": 76
+  },
+  {
+    "session": "S72",
+    "duration": 720,
+    "browser": "Chrome",
+    "events": 77
+  },
+  {
+    "session": "S73",
+    "duration": 730,
+    "browser": "Chrome",
+    "events": 78
+  },
+  {
+    "session": "S74",
+    "duration": 740,
+    "browser": "Chrome",
+    "events": 79
+  },
+  {
+    "session": "S75",
+    "duration": 750,
+    "browser": "Chrome",
+    "events": 80
+  },
+  {
+    "session": "S76",
+    "duration": 760,
+    "browser": "Chrome",
+    "events": 81
+  },
+  {
+    "session": "S77",
+    "duration": 770,
+    "browser": "Chrome",
+    "events": 82
+  },
+  {
+    "session": "S78",
+    "duration": 780,
+    "browser": "Chrome",
+    "events": 83
+  },
+  {
+    "session": "S79",
+    "duration": 790,
+    "browser": "Chrome",
+    "events": 84
+  },
+  {
+    "session": "S80",
+    "duration": 800,
+    "browser": "Chrome",
+    "events": 85
+  }
+]

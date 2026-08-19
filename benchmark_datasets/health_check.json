@@ -1,0 +1,9 @@
+{
+  "status": "up",
+  "checks": {
+    "cpu": "ok",
+    "mem": "ok",
+    "disk": "warn"
+  },
+  "uptime": 123456
+}

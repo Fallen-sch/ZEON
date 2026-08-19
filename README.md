@@ -1,6 +1,14 @@
 <div align="center">
+  <img src="vscode-zeon/icons/zeon-logo.png" alt="ZEON Logo" width="120" />
   <h1>ZEON</h1>
   <p><strong>Zero-overhead Encoding Object Notation</strong></p>
+  <p>
+    <a href="https://www.npmjs.com/package/zeon-format"><img src="https://img.shields.io/npm/v/zeon-format?color=38bdf8&label=NPM" alt="NPM Version" /></a>
+    <a href="https://pypi.org/project/zeon-format/"><img src="https://img.shields.io/pypi/v/zeon-format?color=ffd343&label=PyPI" alt="PyPI Version" /></a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=FallenBR.zeon-vscode"><img src="https://img.shields.io/badge/VS%20Code-v1.0.0-0ea5e9?logo=visualstudiocode" alt="VS Code Extension" /></a>
+    <a href="https://open-vsx.org/extension/FallenBR/zeon-vscode"><img src="https://img.shields.io/open-vsx/v/FallenBR/zeon-vscode?color=8b5cf6&label=Open%20VSX" alt="Open VSX Registry" /></a>
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" />
+  </p>
   <p>A next-generation tabular serialization format designed for maximum LLM token efficiency.</p>
 </div>
 
@@ -26,7 +34,7 @@ When dealing with arrays of objects (like a list of 1,000 products), JSON forces
 
 ## The ZEON Solution
 
-ZEON solves this through **Tabular Indentation**. By using special suffixes (`[]` and `[][]`) directly on the keys, you tell the parser exactly how to read the indented block below it. The header is declared only once, and the data flows cleanly underneath.
+ZEON solves this through **Tabular Indentation**. By using special suffixes directly on the keys, you tell the parser exactly how to read the indented block below it. The header is declared only once, and the data flows cleanly underneath.
 
 ### Example comparison
 
@@ -96,7 +104,7 @@ This gracefully parses to `{"damage": 10, "defense": 10, "extra_fire": 5}`.
 
 
 ### 5. N-Dimensional Matrices
-Use the `[][]`, `[2]`, or `[3]` suffixes for pure multidimensional arrays with no headers (e.g., coordinates, tensor data). 
+Use the `[2]` or `[3]` suffixes for pure multidimensional arrays with no headers (e.g., coordinates, tensor data). 
 For 3D Matrices (`[3]`), layers are separated by a double newline.
 
 ```python
@@ -119,17 +127,17 @@ ZEON allows human-friendly annotations to enhance readability without affecting 
 
 ```python
 users[]
-  id name preferences(theme) nicknames() aliases[]
-  1 Maria (light) nicknames[Maria]=(1=M 2=Mah) [mary mah]
+  id[Number] name preferences(theme) aliases[]
+  1 Maria (light) [mary mah]
 ```
-The parser completely ignores `()`, `[]` and `[Maria]`, resulting in pristine JSON keys. The ZEON stringifier automatically generates `()` and `[]` for deep objects and arrays.
+The parser completely ignores `()`, `[]` and `[Number]`, resulting in pristine JSON keys. The ZEON stringifier automatically generates `()` and `[]` for deep objects and arrays.
 
 ### 7. Multiline Objects and Arrays
 Unlike JSON which requires commas, ZEON allows beautiful multiline formatting inside `(...)` (dictionaries) and `[...]` (arrays) while natively ignoring indentation and line breaks, exactly like Python.
 
 ```python
-config
-  db_pool (
+config=(
+  db_pool=(
     host=localhost
     port=5432
     options=(
@@ -137,10 +145,11 @@ config
       timeout=30
     )
   )
-  nodes [
+  nodes=[
     192.168.0.1
     192.168.0.2
   ]
+)
 ```
 
 ### 8. Hybrid Tabular-Inline
@@ -189,6 +198,52 @@ ZEON Equivalent:
 mixed_data=[1 "hello" (flag=True) [2 3]]
 ```
 Notice how `[]` brackets are used for arrays and `()` for nested objects (`flag=True`). This allows you to represent any deeply nested chaos securely, retaining the exact structure of JSON while stripping away commas and quotes.
+
+---
+
+## Teaching ZEON to your AI (System Prompt)
+
+Since ZEON is an innovative format, Large Language Models (LLMs) like GPT-4 or Claude might need a brief instruction in their **System Prompt** to generate responses perfectly in the tabular format.
+
+Whenever you ask the AI to return structured data, include the following block in your prompt:
+
+```text
+Please return the data strictly in ZEON format.
+To learn how ZEON works, study the reference file below. It uses tabular indentation, suffixes like `[]` for arrays, and completely drops the use of JSON braces {} and commas.
+
+<reference.zeon>
+project_name="ZEON Demo"
+is_active=True
+
+# Flat objects use simple indentation
+config
+  timeout retries
+  30 5
+
+# Tabular arrays use the [] suffix
+users[]
+  id name preferences(theme)
+  1 "Alice" (dark)
+  2 "Bob" (light)
+
+# Dynamic extra attributes can be added inline at the end of the row
+logs[]
+  level message
+  INFO "System started" timestamp=2026-08-18T10:00:00Z
+  ERROR "DB Failed" retry=True
+
+# 3D Matrices use the [3] suffix and double line breaks
+matrix_3d[3]
+  1 0
+  0 1
+
+  1 1
+  1 1
+</reference.zeon>
+```
+Providing this single, generic example as context (Few-Shot Prompting) is enough for any modern AI to natively understand the mechanics and instantly slash your token usage.
+
+**Pro Tip:** To use ZEON in projects with highly complex data structures, the best approach is to translate one of your own JSON files to ZEON (using our CLI or parser) and then provide it to the AI as the reference example!
 
 ---
 

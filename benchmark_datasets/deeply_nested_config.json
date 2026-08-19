@@ -1,0 +1,31 @@
+{
+  "server": {
+    "host": "localhost",
+    "port": 8080,
+    "ssl": {
+      "enabled": true,
+      "cert": "/etc/ssl/cert.pem",
+      "key": "/etc/ssl/key.pem",
+      "options": {
+        "verify_peer": false,
+        "depth": 2
+      }
+    },
+    "logging": {
+      "level": "INFO",
+      "file": "/var/log/app.log",
+      "rotation": {
+        "max_size": "10MB",
+        "keep": 5
+      }
+    }
+  },
+  "database": {
+    "url": "postgres://user:pass@localhost:5432/db",
+    "pool": {
+      "min": 2,
+      "max": 10,
+      "timeout": 3000
+    }
+  }
+}

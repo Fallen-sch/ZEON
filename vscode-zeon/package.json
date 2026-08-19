@@ -1,9 +1,15 @@
 {
   "name": "zeon-vscode",
-  "displayName": "ZEON Language Support",
+  "displayName": "ZEON Format",
   "description": "Syntax highlighting and preview for ZEON format",
   "version": "1.0.0",
-  "publisher": "lion",
+  "license": "MIT",
+  "publisher": "FallenBR",
+  "icon": "icons/zeon-logo.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Michael-Jhonathan/Zeon-website.git"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -11,7 +17,7 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "*"
+    "onLanguage:zeon"
   ],
   "contributes": {
     "languages": [
@@ -24,6 +30,10 @@
         "extensions": [
           ".zeon"
         ],
+        "icon": {
+          "light": "./icons/zeon-logo.svg",
+          "dark": "./icons/zeon-logo.svg"
+        },
         "configuration": "./language-configuration.json"
       }
     ],

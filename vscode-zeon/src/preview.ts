@@ -350,6 +350,11 @@ export function getPreviewHtml(text: string, showTip: boolean = true): string {
           border-bottom: 1px dashed var(--vscode-editorLineNumber-foreground);
           padding-bottom: 4px;
         }
+        .grid-container > div:not(.grid-header) {
+          border-bottom: 1px dotted var(--vscode-editorLineNumber-activeForeground, rgba(128, 128, 128, 0.3));
+          padding-bottom: 4px;
+          padding-top: 4px;
+        }
         .cell-wrapper {
           display: flex;
           align-items: flex-start;
@@ -404,12 +409,20 @@ export function getPreviewHtml(text: string, showTip: boolean = true): string {
         const vscode = acquireVsCodeApi();
         document.querySelectorAll('[contenteditable="true"]').forEach(cell => {
            // We store the initial raw text. If it's a styled span, innerText extracts just the text nicely.
+           cell.addEventListener('focus', (e) => {
+              e.target.dataset.initial = e.target.innerText.trim();
+           });
+           
            cell.addEventListener('blur', (e) => {
               const el = e.target;
+              const newValue = el.innerText.trim();
+              if (newValue === el.dataset.initial) {
+                  return;
+              }
+              
               const type = el.getAttribute('data-type') || 'val';
               const line = parseInt(el.getAttribute('data-line'), 10);
               const idx = el.hasAttribute('data-idx') ? parseInt(el.getAttribute('data-idx'), 10) : 0;
-              const newValue = el.innerText.trim();
               
               vscode.postMessage({
                  command: 'edit',
@@ -429,13 +442,42 @@ export function getPreviewHtml(text: string, showTip: boolean = true): string {
            });
         });
 
-        // Add Ctrl+S support in preview
-        window.addEventListener('keydown', (e) => {
-           if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
-              e.preventDefault();
-              vscode.postMessage({ command: 'save' });
-           }
-        });
+         // Add Ctrl+S support in preview
+         window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+               e.preventDefault();
+               
+               let isEditing = false;
+               if (document.activeElement && document.activeElement.hasAttribute('contenteditable')) {
+                   const el = document.activeElement;
+                   const newValue = el.innerText.trim();
+                   
+                   if (newValue !== el.dataset.initial) {
+                       const type = el.getAttribute('data-type') || 'val';
+                       const line = parseInt(el.getAttribute('data-line'), 10);
+                       const idx = el.hasAttribute('data-idx') ? parseInt(el.getAttribute('data-idx'), 10) : 0;
+                       
+                       vscode.postMessage({
+                          command: 'edit',
+                          type: type,
+                          line: line,
+                          idx: idx,
+                          newValue: newValue,
+                          saveAfter: true // Flag to tell extension to save immediately after edit
+                       });
+                       isEditing = true;
+                   }
+                   
+                   // Update initial so blur doesn't send duplicate message
+                   el.dataset.initial = newValue;
+                   el.blur();
+               }
+               
+               if (!isEditing) {
+                   vscode.postMessage({ command: 'save' });
+               }
+            }
+         });
 
         // Determine if cells actually overflow past 2 lines and show/hide buttons
         requestAnimationFrame(() => {

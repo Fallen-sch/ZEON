@@ -1,0 +1,121 @@
+metadata:
+  export_date: '2023-10-01'
+  version: 1.2
+orders:
+- items:
+  - qty: 1
+    sku: ITEM-1
+  - qty: 1
+    sku: ITEM-11
+  order_id: ORD-1
+  total: 15.5
+  user_id: 1
+- items:
+  - qty: 2
+    sku: ITEM-2
+  - qty: 1
+    sku: ITEM-12
+  order_id: ORD-2
+  total: 31.0
+  user_id: 2
+- items:
+  - qty: 3
+    sku: ITEM-3
+  - qty: 1
+    sku: ITEM-13
+  order_id: ORD-3
+  total: 46.5
+  user_id: 1
+- items:
+  - qty: 4
+    sku: ITEM-4
+  - qty: 1
+    sku: ITEM-14
+  order_id: ORD-4
+  total: 62.0
+  user_id: 2
+- items:
+  - qty: 5
+    sku: ITEM-5
+  - qty: 1
+    sku: ITEM-15
+  order_id: ORD-5
+  total: 77.5
+  user_id: 1
+- items:
+  - qty: 6
+    sku: ITEM-6
+  - qty: 1
+    sku: ITEM-16
+  order_id: ORD-6
+  total: 93.0
+  user_id: 2
+- items:
+  - qty: 7
+    sku: ITEM-7
+  - qty: 1
+    sku: ITEM-17
+  order_id: ORD-7
+  total: 108.5
+  user_id: 1
+- items:
+  - qty: 8
+    sku: ITEM-8
+  - qty: 1
+    sku: ITEM-18
+  order_id: ORD-8
+  total: 124.0
+  user_id: 2
+- items:
+  - qty: 9
+    sku: ITEM-9
+  - qty: 1
+    sku: ITEM-19
+  order_id: ORD-9
+  total: 139.5
+  user_id: 1
+- items:
+  - qty: 10
+    sku: ITEM-10
+  - qty: 1
+    sku: ITEM-20
+  order_id: ORD-10
+  total: 155.0
+  user_id: 2
+- items:
+  - qty: 11
+    sku: ITEM-11
+  - qty: 1
+    sku: ITEM-21
+  order_id: ORD-11
+  total: 170.5
+  user_id: 1
+- items:
+  - qty: 12
+    sku: ITEM-12
+  - qty: 1
+    sku: ITEM-22
+  order_id: ORD-12
+  total: 186.0
+  user_id: 2
+- items:
+  - qty: 13
+    sku: ITEM-13
+  - qty: 1
+    sku: ITEM-23
+  order_id: ORD-13
+  total: 201.5
+  user_id: 1
+- items:
+  - qty: 14
+    sku: ITEM-14
+  - qty: 1
+    sku: ITEM-24
+  order_id: ORD-14
+  total: 217.0
+  user_id: 2
+users:
+- id: 1
+  name: Alice
+- id: 2
+  name: Bob

@@ -1,0 +1,23 @@
+metadata
+  version export_date
+  1.2 2023-10-01
+users[]
+  id name
+  1 Alice
+  2 Bob
+orders[]
+  order_id user_id items[] total
+  ORD-1 1 [(sku=ITEM-1 qty=1) (sku=ITEM-11 qty=1)] 15.5
+  ORD-2 2 [(sku=ITEM-2 qty=2) (sku=ITEM-12 qty=1)] 31.0
+  ORD-3 1 [(sku=ITEM-3 qty=3) (sku=ITEM-13 qty=1)] 46.5
+  ORD-4 2 [(sku=ITEM-4 qty=4) (sku=ITEM-14 qty=1)] 62.0
+  ORD-5 1 [(sku=ITEM-5 qty=5) (sku=ITEM-15 qty=1)] 77.5
+  ORD-6 2 [(sku=ITEM-6 qty=6) (sku=ITEM-16 qty=1)] 93.0
+  ORD-7 1 [(sku=ITEM-7 qty=7) (sku=ITEM-17 qty=1)] 108.5
+  ORD-8 2 [(sku=ITEM-8 qty=8) (sku=ITEM-18 qty=1)] 124.0
+  ORD-9 1 [(sku=ITEM-9 qty=9) (sku=ITEM-19 qty=1)] 139.5
+  ORD-10 2 [(sku=ITEM-10 qty=10) (sku=ITEM-20 qty=1)] 155.0
+  ORD-11 1 [(sku=ITEM-11 qty=11) (sku=ITEM-21 qty=1)] 170.5
+  ORD-12 2 [(sku=ITEM-12 qty=12) (sku=ITEM-22 qty=1)] 186.0
+  ORD-13 1 [(sku=ITEM-13 qty=13) (sku=ITEM-23 qty=1)] 201.5
+  ORD-14 2 [(sku=ITEM-14 qty=14) (sku=ITEM-24 qty=1)] 217.0

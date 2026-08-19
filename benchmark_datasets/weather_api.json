@@ -1,0 +1,37 @@
+[
+  {
+    "date": "2023-10-01",
+    "temp": 21,
+    "conditions": "Sunny"
+  },
+  {
+    "date": "2023-10-02",
+    "temp": 22,
+    "conditions": "Sunny"
+  },
+  {
+    "date": "2023-10-03",
+    "temp": 23,
+    "conditions": "Sunny"
+  },
+  {
+    "date": "2023-10-04",
+    "temp": 24,
+    "conditions": "Sunny"
+  },
+  {
+    "date": "2023-10-05",
+    "temp": 25,
+    "conditions": "Sunny"
+  },
+  {
+    "date": "2023-10-06",
+    "temp": 26,
+    "conditions": "Sunny"
+  },
+  {
+    "date": "2023-10-07",
+    "temp": 27,
+    "conditions": "Sunny"
+  }
+]

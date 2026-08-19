@@ -1,0 +1,5 @@
+status=up
+checks
+  cpu mem disk
+  ok ok warn
+uptime=123456

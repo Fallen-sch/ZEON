@@ -1,0 +1,228 @@
+{
+  "metadata": {
+    "version": 1.2,
+    "export_date": "2023-10-01"
+  },
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice"
+    },
+    {
+      "id": 2,
+      "name": "Bob"
+    }
+  ],
+  "orders": [
+    {
+      "order_id": "ORD-1",
+      "user_id": 1,
+      "items": [
+        {
+          "sku": "ITEM-1",
+          "qty": 1
+        },
+        {
+          "sku": "ITEM-11",
+          "qty": 1
+        }
+      ],
+      "total": 15.5
+    },
+    {
+      "order_id": "ORD-2",
+      "user_id": 2,
+      "items": [
+        {
+          "sku": "ITEM-2",
+          "qty": 2
+        },
+        {
+          "sku": "ITEM-12",
+          "qty": 1
+        }
+      ],
+      "total": 31.0
+    },
+    {
+      "order_id": "ORD-3",
+      "user_id": 1,
+      "items": [
+        {
+          "sku": "ITEM-3",
+          "qty": 3
+        },
+        {
+          "sku": "ITEM-13",
+          "qty": 1
+        }
+      ],
+      "total": 46.5
+    },
+    {
+      "order_id": "ORD-4",
+      "user_id": 2,
+      "items": [
+        {
+          "sku": "ITEM-4",
+          "qty": 4
+        },
+        {
+          "sku": "ITEM-14",
+          "qty": 1
+        }
+      ],
+      "total": 62.0
+    },
+    {
+      "order_id": "ORD-5",
+      "user_id": 1,
+      "items": [
+        {
+          "sku": "ITEM-5",
+          "qty": 5
+        },
+        {
+          "sku": "ITEM-15",
+          "qty": 1
+        }
+      ],
+      "total": 77.5
+    },
+    {
+      "order_id": "ORD-6",
+      "user_id": 2,
+      "items": [
+        {
+          "sku": "ITEM-6",
+          "qty": 6
+        },
+        {
+          "sku": "ITEM-16",
+          "qty": 1
+        }
+      ],
+      "total": 93.0
+    },
+    {
+      "order_id": "ORD-7",
+      "user_id": 1,
+      "items": [
+        {
+          "sku": "ITEM-7",
+          "qty": 7
+        },
+        {
+          "sku": "ITEM-17",
+          "qty": 1
+        }
+      ],
+      "total": 108.5
+    },
+    {
+      "order_id": "ORD-8",
+      "user_id": 2,
+      "items": [
+        {
+          "sku": "ITEM-8",
+          "qty": 8
+        },
+        {
+          "sku": "ITEM-18",
+          "qty": 1
+        }
+      ],
+      "total": 124.0
+    },
+    {
+      "order_id": "ORD-9",
+      "user_id": 1,
+      "items": [
+        {
+          "sku": "ITEM-9",
+          "qty": 9
+        },
+        {
+          "sku": "ITEM-19",
+          "qty": 1
+        }
+      ],
+      "total": 139.5
+    },
+    {
+      "order_id": "ORD-10",
+      "user_id": 2,
+      "items": [
+        {
+          "sku": "ITEM-10",
+          "qty": 10
+        },
+        {
+          "sku": "ITEM-20",
+          "qty": 1
+        }
+      ],
+      "total": 155.0
+    },
+    {
+      "order_id": "ORD-11",
+      "user_id": 1,
+      "items": [
+        {
+          "sku": "ITEM-11",
+          "qty": 11
+        },
+        {
+          "sku": "ITEM-21",
+          "qty": 1
+        }
+      ],
+      "total": 170.5
+    },
+    {
+      "order_id": "ORD-12",
+      "user_id": 2,
+      "items": [
+        {
+          "sku": "ITEM-12",
+          "qty": 12
+        },
+        {
+          "sku": "ITEM-22",
+          "qty": 1
+        }
+      ],
+      "total": 186.0
+    },
+    {
+      "order_id": "ORD-13",
+      "user_id": 1,
+      "items": [
+        {
+          "sku": "ITEM-13",
+          "qty": 13
+        },
+        {
+          "sku": "ITEM-23",
+          "qty": 1
+        }
+      ],
+      "total": 201.5
+    },
+    {
+      "order_id": "ORD-14",
+      "user_id": 2,
+      "items": [
+        {
+          "sku": "ITEM-14",
+          "qty": 14
+        },
+        {
+          "sku": "ITEM-24",
+          "qty": 1
+        }
+      ],
+      "total": 217.0
+    }
+  ]
+}

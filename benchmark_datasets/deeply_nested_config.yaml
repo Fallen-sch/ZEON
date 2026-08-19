@@ -1,0 +1,22 @@
+database:
+  pool:
+    max: 10
+    min: 2
+    timeout: 3000
+  url: postgres://user:pass@localhost:5432/db
+server:
+  host: localhost
+  logging:
+    file: /var/log/app.log
+    level: INFO
+    rotation:
+      keep: 5
+      max_size: 10MB
+  port: 8080
+  ssl:
+    cert: /etc/ssl/cert.pem
+    enabled: true
+    key: /etc/ssl/key.pem
+    options:
+      depth: 2
+      verify_peer: false

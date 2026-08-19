@@ -1,0 +1,6 @@
+checks:
+  cpu: ok
+  disk: warn
+  mem: ok
+status: up
+uptime: 123456

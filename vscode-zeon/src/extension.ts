@@ -61,7 +61,7 @@ const semanticProvider: vscode.DocumentSemanticTokensProvider = {
       if (inTabularBlock && columnTokens.length > 0 && currentIndent > blockIndent) {
         let match;
         // Basic lexer regex to find contiguous values
-        const valRegex = /"[^"]*"|\([^)]*\)|\[[^\]]*\]|\{[^}]*\}|[^\s()\[\]={}]+/g;
+        const valRegex = /"(?:[^"\\]|\\.)*"|\([^)]*\)|\[[^\]]*\]|\{[^}]*\}|[^\s()\[\]={}]+/g;
         let valIdx = 0;
         while ((match = valRegex.exec(line)) !== null) {
           // If this is an inline attribution (e.g. key=value), don't color it as a tabular column
@@ -133,7 +133,7 @@ const hoverProvider: vscode.HoverProvider = {
     if (line === columnsLine) return null;
 
     // Find the hovered value index
-    const valRegex = /"[^"]*"|\([^)]*\)|\[[^\]]*\]|\{[^}]*\}|[^\s()\[\]={}]+/g;
+    const valRegex = /"(?:[^"\\]|\\.)*"|\([^)]*\)|\[[^\]]*\]|\{[^}]*\}|[^\s()\[\]={}]+/g;
     let valIdx = 0;
     while ((match = valRegex.exec(line)) !== null) {
       if (match[0].includes('=')) continue;
@@ -374,102 +374,129 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   let currentPanel: vscode.WebviewPanel | undefined = undefined;
+  let currentTargetDocument: vscode.TextDocument | undefined = undefined;
 
-  let disposable = vscode.commands.registerCommand('zeon.showPreview', () => {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor || editor.document.languageId !== 'zeon') {
+  let disposable = vscode.commands.registerCommand('zeon.showPreview', async (uri?: vscode.Uri) => {
+    if (uri) {
+      currentTargetDocument = await vscode.workspace.openTextDocument(uri);
+    } else if (vscode.window.activeTextEditor) {
+      currentTargetDocument = vscode.window.activeTextEditor.document;
+    }
+
+    if (!currentTargetDocument || currentTargetDocument.languageId !== 'zeon') {
       vscode.window.showErrorMessage('No active ZEON document found.');
       return;
     }
 
     if (currentPanel) {
       currentPanel.reveal(vscode.ViewColumn.Active);
+      const showTip = context.globalState.get<boolean>('zeon.showPreviewTip', true);
+      currentPanel.webview.html = getPreviewHtml(currentTargetDocument.getText(), showTip);
+      currentPanel.title = `Preview: ${currentTargetDocument.fileName.split('/').pop()?.split('\\').pop()}`;
     } else {
       currentPanel = vscode.window.createWebviewPanel(
         'zeonPreview',
-        `Preview: ${editor.document.fileName.split('/').pop()?.split('\\').pop()}`,
+        `Preview: ${currentTargetDocument.fileName.split('/').pop()?.split('\\').pop()}`,
         vscode.ViewColumn.Active,
         { enableScripts: true }
       );
 
       const updateWebview = () => {
-        if (currentPanel && vscode.window.activeTextEditor && vscode.window.activeTextEditor.document.languageId === 'zeon') {
+        if (currentPanel && currentTargetDocument) {
           const showTip = context.globalState.get<boolean>('zeon.showPreviewTip', true);
-          currentPanel.webview.html = getPreviewHtml(vscode.window.activeTextEditor.document.getText(), showTip);
+          currentPanel.webview.html = getPreviewHtml(currentTargetDocument.getText(), showTip);
         }
       };
 
       updateWebview();
 
       const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
-        if (e.document === editor.document) {
+        if (currentTargetDocument && e.document.uri.toString() === currentTargetDocument.uri.toString()) {
           updateWebview();
         }
       });
 
-      currentPanel.webview.onDidReceiveMessage(async (message) => {
-         if (message.command === 'closeTip') {
-            context.globalState.update('zeon.showPreviewTip', false);
-            return;
-         }
+      let messageQueue = Promise.resolve();
 
-         if (message.command === 'save') {
-            await editor.document.save();
-            vscode.window.showInformationMessage('ZEON file saved!');
-            return;
-         }
+      currentPanel.webview.onDidReceiveMessage((message) => {
+         messageQueue = messageQueue.then(async () => {
+            if (message.command === 'closeTip') {
+               context.globalState.update('zeon.showPreviewTip', false);
+               return;
+            }
 
-         if (message.command === 'edit') {
-            const lineText = editor.document.lineAt(message.line).text;
-            const edit = new vscode.WorkspaceEdit();
-
-            if (message.type === 'blockKey') {
-               const match = lineText.match(/^(\s*)([a-zA-Z0-9_\-]+)/);
-               if (match) {
-                  const start = match[1].length;
-                  const end = start + match[2].length;
-                  const range = new vscode.Range(message.line, start, message.line, end);
-                  edit.replace(editor.document.uri, range, message.newValue);
+            if (message.command === 'save') {
+               if (currentTargetDocument) {
+                   if (currentTargetDocument.isClosed) {
+                       vscode.window.showErrorMessage('ZEON file is closed.');
+                       return;
+                   }
+                   await currentTargetDocument.save();
+                   vscode.window.showInformationMessage('ZEON file saved!');
                }
-            } else if (message.type === 'colKey') {
-               const colRegex = /[^\s()\[\]={}]+/g;
-               let match;
-               let currentIdx = 0;
-               while ((match = colRegex.exec(lineText)) !== null) {
-                  if (currentIdx === message.idx) {
-                     const range = new vscode.Range(message.line, match.index, message.line, match.index + match[0].length);
-                     edit.replace(editor.document.uri, range, message.newValue);
-                     break;
-                  }
-                  currentIdx++;
-               }
-            } else {
-               const valRegex = /"[^"]*"|\([^)]*\)|\[[^\]]*\]|\{[^}]*\}|[^\s()\[\]={}]+/g;
-               let match;
-               let currentIdx = 0;
+               return;
+            }
+
+            if (message.command === 'edit' && currentTargetDocument) {
+               if (currentTargetDocument.isClosed) return;
                
-               while ((match = valRegex.exec(lineText)) !== null) {
-                  if (match[0].includes('=')) continue;
-                  
-                  if (currentIdx === message.idx) {
-                     const range = new vscode.Range(
-                        new vscode.Position(message.line, match.index),
-                        new vscode.Position(message.line, match.index + match[0].length)
-                     );
-                     
-                     edit.replace(editor.document.uri, range, message.newValue);
-                     break;
+               const lineText = currentTargetDocument.lineAt(message.line).text;
+               const edit = new vscode.WorkspaceEdit();
+
+               if (message.type === 'blockKey') {
+                  const match = lineText.match(/^(\s*)([a-zA-Z0-9_\-]+)/);
+                  if (match) {
+                     const start = match[1].length;
+                     const end = start + match[2].length;
+                     const range = new vscode.Range(message.line, start, message.line, end);
+                     edit.replace(currentTargetDocument.uri, range, message.newValue);
                   }
-                  currentIdx++;
+               } else if (message.type === 'colKey') {
+                  const colRegex = /[^\s()\[\]={}]+/g;
+                  let match;
+                  let currentIdx = 0;
+                  while ((match = colRegex.exec(lineText)) !== null) {
+                     if (currentIdx === message.idx) {
+                        const range = new vscode.Range(message.line, match.index, message.line, match.index + match[0].length);
+                        edit.replace(currentTargetDocument.uri, range, message.newValue);
+                        break;
+                     }
+                     currentIdx++;
+                  }
+               } else {
+                  const valRegex = /"(?:[^"\\]|\\.)*"|\([^)]*\)|\[[^\]]*\]|\{[^}]*\}|[^\s()\[\]={}]+/g;
+                  let match;
+                  let currentIdx = 0;
+                  
+                  while ((match = valRegex.exec(lineText)) !== null) {
+                     if (match[0].includes('=')) continue;
+                     
+                     if (currentIdx === message.idx) {
+                        const range = new vscode.Range(
+                           new vscode.Position(message.line, match.index),
+                           new vscode.Position(message.line, match.index + match[0].length)
+                        );
+                        
+                        edit.replace(currentTargetDocument.uri, range, message.newValue);
+                        break;
+                     }
+                     currentIdx++;
+                  }
+               }
+               await vscode.workspace.applyEdit(edit);
+               
+               if (message.saveAfter && currentTargetDocument) {
+                   await currentTargetDocument.save();
+                   vscode.window.showInformationMessage('ZEON file saved!');
                }
             }
-            await vscode.workspace.applyEdit(edit);
-         }
+         });
       }, undefined, context.subscriptions);
 
       currentPanel.onDidDispose(() => {
         changeDocumentSubscription.dispose();
         currentPanel = undefined;
+        currentTargetDocument = undefined;
       }, null, context.subscriptions);
     }
   });

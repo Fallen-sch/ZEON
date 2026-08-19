@@ -55,6 +55,8 @@ examples/
 example.md
 token.txt
 BENCHMARKS.md
+website/
+scripts/
 
 # JavaScript / VSCode Extension
 node_modules/

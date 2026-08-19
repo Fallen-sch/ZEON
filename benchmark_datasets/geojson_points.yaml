@@ -1,0 +1,32 @@
+features:
+- geometry:
+    coordinates:
+    - 1
+    - 2
+    type: Point
+  type: Feature
+- geometry:
+    coordinates:
+    - 2
+    - 4
+    type: Point
+  type: Feature
+- geometry:
+    coordinates:
+    - 3
+    - 6
+    type: Point
+  type: Feature
+- geometry:
+    coordinates:
+    - 4
+    - 8
+    type: Point
+  type: Feature
+- geometry:
+    coordinates:
+    - 5
+    - 10
+    type: Point
+  type: Feature
+type: FeatureCollection

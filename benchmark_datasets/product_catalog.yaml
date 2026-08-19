@@ -1,0 +1,160 @@
+- name: Product 1
+  price: 9.99
+  sku: PRD-1
+  stock: 5
+- name: Product 2
+  price: 19.98
+  sku: PRD-2
+  stock: 10
+- name: Product 3
+  price: 29.97
+  sku: PRD-3
+  stock: 15
+- name: Product 4
+  price: 39.96
+  sku: PRD-4
+  stock: 20
+- name: Product 5
+  price: 49.95
+  sku: PRD-5
+  stock: 25
+- name: Product 6
+  price: 59.94
+  sku: PRD-6
+  stock: 30
+- name: Product 7
+  price: 69.93
+  sku: PRD-7
+  stock: 35
+- name: Product 8
+  price: 79.92
+  sku: PRD-8
+  stock: 40
+- name: Product 9
+  price: 89.91
+  sku: PRD-9
+  stock: 45
+- name: Product 10
+  price: 99.9
+  sku: PRD-10
+  stock: 50
+- name: Product 11
+  price: 109.89
+  sku: PRD-11
+  stock: 55
+- name: Product 12
+  price: 119.88
+  sku: PRD-12
+  stock: 60
+- name: Product 13
+  price: 129.87
+  sku: PRD-13
+  stock: 65
+- name: Product 14
+  price: 139.86
+  sku: PRD-14
+  stock: 70
+- name: Product 15
+  price: 149.85
+  sku: PRD-15
+  stock: 75
+- name: Product 16
+  price: 159.84
+  sku: PRD-16
+  stock: 80
+- name: Product 17
+  price: 169.83
+  sku: PRD-17
+  stock: 85
+- name: Product 18
+  price: 179.82
+  sku: PRD-18
+  stock: 90
+- name: Product 19
+  price: 189.81
+  sku: PRD-19
+  stock: 95
+- name: Product 20
+  price: 199.8
+  sku: PRD-20
+  stock: 100
+- name: Product 21
+  price: 209.79
+  sku: PRD-21
+  stock: 105
+- name: Product 22
+  price: 219.78
+  sku: PRD-22
+  stock: 110
+- name: Product 23
+  price: 229.77
+  sku: PRD-23
+  stock: 115
+- name: Product 24
+  price: 239.76
+  sku: PRD-24
+  stock: 120
+- name: Product 25
+  price: 249.75
+  sku: PRD-25
+  stock: 125
+- name: Product 26
+  price: 259.74
+  sku: PRD-26
+  stock: 130
+- name: Product 27
+  price: 269.73
+  sku: PRD-27
+  stock: 135
+- name: Product 28
+  price: 279.72
+  sku: PRD-28
+  stock: 140
+- name: Product 29
+  price: 289.71
+  sku: PRD-29
+  stock: 145
+- name: Product 30
+  price: 299.7
+  sku: PRD-30
+  stock: 150
+- name: Product 31
+  price: 309.69
+  sku: PRD-31
+  stock: 155
+- name: Product 32
+  price: 319.68
+  sku: PRD-32
+  stock: 160
+- name: Product 33
+  price: 329.67
+  sku: PRD-33
+  stock: 165
+- name: Product 34
+  price: 339.66
+  sku: PRD-34
+  stock: 170
+- name: Product 35
+  price: 349.65
+  sku: PRD-35
+  stock: 175
+- name: Product 36
+  price: 359.64
+  sku: PRD-36
+  stock: 180
+- name: Product 37
+  price: 369.63
+  sku: PRD-37
+  stock: 185
+- name: Product 38
+  price: 379.62
+  sku: PRD-38
+  stock: 190
+- name: Product 39
+  price: 389.61
+  sku: PRD-39
+  stock: 195
+- name: Product 40
+  price: 399.6
+  sku: PRD-40
+  stock: 200

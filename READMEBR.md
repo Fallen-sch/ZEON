@@ -1,6 +1,14 @@
 <div align="center">
+  <img src="vscode-zeon/icons/zeon-logo.png" alt="ZEON Logo" width="120" />
   <h1>ZEON</h1>
   <p><strong>Zero-overhead Encoding Object Notation</strong></p>
+  <p>
+    <a href="https://www.npmjs.com/package/zeon-format"><img src="https://img.shields.io/npm/v/zeon-format?color=38bdf8&label=NPM" alt="NPM Version" /></a>
+    <a href="https://pypi.org/project/zeon-format/"><img src="https://img.shields.io/pypi/v/zeon-format?color=ffd343&label=PyPI" alt="PyPI Version" /></a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=FallenBR.zeon-vscode"><img src="https://img.shields.io/badge/VS%20Code-v1.0.0-0ea5e9?logo=visualstudiocode" alt="VS Code Extension" /></a>
+    <a href="https://open-vsx.org/extension/FallenBR/zeon-vscode"><img src="https://img.shields.io/open-vsx/v/FallenBR/zeon-vscode?color=8b5cf6&label=Open%20VSX" alt="Open VSX Registry" /></a>
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT" />
+  </p>
   <p>Uma linguagem de serialização tabular de nova geração, projetada para a máxima eficiência de LLMs.</p>
 </div>
 
@@ -26,7 +34,7 @@ Ao lidar com arrays de objetos (como uma lista de 1.000 produtos), o JSON te obr
 
 ## A Solução ZEON
 
-O ZEON resolve isso através da **Indentação Tabular**. Ao usar sufixos especiais (`[]` e `[][]`) diretamente nas chaves, você avisa ao parser exatamente como ler o bloco indentado abaixo dele. O cabeçalho é declarado apenas uma vez, e os dados fluem de forma limpa abaixo dele.
+O ZEON resolve isso através da **Indentação Tabular**. Ao usar sufixos especiais diretamente nas chaves, você avisa ao parser exatamente como ler o bloco indentado abaixo dele. O cabeçalho é declarado apenas uma vez, e os dados fluem de forma limpa abaixo dele.
 
 ### Comparação Prática
 
@@ -96,7 +104,7 @@ Isso é perfeitamente convertido para: `{"damage": 10, "defense": 10, "extra_fir
 
 
 ### 5. Matrizes N-Dimensionais
-Use os sufixos `[][]`, `[2]`, ou `[3]` para arrays multidimensionais puros, sem cabeçalhos (ex: coordenadas, dados de tensores).
+Use os sufixos `[2]` ou `[3]` para arrays multidimensionais puros, sem cabeçalhos (ex: coordenadas, dados de tensores).
 Para Matrizes 3D (`[3]`), as fatias/camadas são separadas por uma linha em branco dupla.
 
 ```python
@@ -119,17 +127,17 @@ O ZEON permite a inclusão de anotações focadas na legibilidade humana, que n�
 
 ```python
 users[]
-  id name preferences(theme) nicknames() aliases[]
-  1 Maria (light) nicknames[Maria]=(1=M 2=Mah) [mary mah]
+  id[Number] name preferences(theme) aliases[]
+  1 Maria (light) [mary mah]
 ```
-O parser ignora completamente `()`, `[]` e `[Maria]`, resultando num JSON de chaves limpas. O Stringifier do ZEON já inclui `()` e `[]` automaticamente ao ser gerado!
+O parser ignora completamente `()`, `[]` e `[Number]`, resultando em chaves JSON limpas. O transformador para ZEON gera automaticamente `()` e `[]` para objetos e arrays profundos.
 
 ### 7. Dicionários e Listas Multilinhas
 Ao contrário do JSON que exige vírgulas para tudo, o ZEON permite uma formatação multilinha deslumbrante dentro de `(...)` (dicionários) e `[...]` (arrays), ignorando quebras de linha e indentações de forma nativa e elegante (idêntico ao Python).
 
 ```python
-config
-  db_pool (
+config=(
+  db_pool=(
     host=localhost
     port=5432
     options=(
@@ -137,10 +145,11 @@ config
       timeout=30
     )
   )
-  nodes [
+  nodes=[
     192.168.0.1
     192.168.0.2
   ]
+)
 ```
 
 ### 8. Formato Híbrido (Tabular + Inline)
@@ -189,6 +198,52 @@ Equivalente em ZEON:
 mixed_data=[1 "hello" (flag=True) [2 3]]
 ```
 Note como usamos colchetes `[]` para arrays soltos e parênteses `()` para objetos (`flag=True`). Isso permite que você represente qualquer caos de dados mistos e aninhados em uma única linha, garantindo a mesma hierarquia que o JSON, mas removendo aspas e vírgulas desnecessárias.
+
+---
+
+## Ensinando o ZEON para a sua IA (System Prompt)
+
+Como o ZEON é um formato inovador, Modelos de Linguagem (LLMs) como GPT-4 ou Claude podem precisar de uma pequena instrução no seu **System Prompt** para que gerem as respostas perfeitamente no formato tabular. 
+
+Sempre que pedir para a IA retornar dados, inclua o seguinte bloco de regras no seu prompt:
+
+```text
+Por favor, retorne os dados estritamente no formato ZEON.
+Para aprender como o ZEON funciona, estude o arquivo de referência abaixo. Ele usa indentação tabular, sufixos como `[]` para arrays, e não utiliza chaves {} ou vírgulas de separação.
+
+<reference.zeon>
+project_name="ZEON Demo"
+is_active=True
+
+# Objetos simples usam indentação
+config
+  timeout retries
+  30 5
+
+# Arrays tabulares usam o sufixo []
+users[]
+  id name preferences(theme)
+  1 "Alice" (dark)
+  2 "Bob" (light)
+
+# Atributos extras dinâmicos podem ser adicionados no final (inline)
+logs[]
+  level message
+  INFO "System started" timestamp=2026-08-18T10:00:00Z
+  ERROR "DB Failed" retry=True
+
+# Matrizes 3D usam o sufixo [3] e separação por duas quebras de linha
+matrix_3d[3]
+  1 0
+  0 1
+
+  1 1
+  1 1
+</reference.zeon>
+```
+Fornecer esse único exemplo genérico como contexto (Few-Shot Prompting) é suficiente para que qualquer IA moderna entenda as regras nativamente e passe a economizar seus tokens. 
+
+**Dica Pro:** Para usar o ZEON em projetos com estruturas muito complexas, a melhor abordagem é traduzir um dos seus próprios arquivos JSON para ZEON (usando a CLI ou o parser) e então fornecê-lo como o arquivo de exemplo para a IA.
 
 ---
 

@@ -1,0 +1,14 @@
+{
+  "en": {
+    "hello": "Hello",
+    "bye": "Goodbye"
+  },
+  "pt": {
+    "hello": "Ol\u00e1",
+    "bye": "Tchau"
+  },
+  "es": {
+    "hello": "Hola",
+    "bye": "Adi\u00f3s"
+  }
+}

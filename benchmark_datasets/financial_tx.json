@@ -1,0 +1,302 @@
+[
+  {
+    "txid": "TXN1",
+    "amt": 100.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN2",
+    "amt": 201.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN3",
+    "amt": 301.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN4",
+    "amt": 402.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN5",
+    "amt": 502.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN6",
+    "amt": 603.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN7",
+    "amt": 703.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN8",
+    "amt": 804.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN9",
+    "amt": 904.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN10",
+    "amt": 1005.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN11",
+    "amt": 1105.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN12",
+    "amt": 1206.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN13",
+    "amt": 1306.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN14",
+    "amt": 1407.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN15",
+    "amt": 1507.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN16",
+    "amt": 1608.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN17",
+    "amt": 1708.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN18",
+    "amt": 1809.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN19",
+    "amt": 1909.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN20",
+    "amt": 2010.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN21",
+    "amt": 2110.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN22",
+    "amt": 2211.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN23",
+    "amt": 2311.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN24",
+    "amt": 2412.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN25",
+    "amt": 2512.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN26",
+    "amt": 2613.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN27",
+    "amt": 2713.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN28",
+    "amt": 2814.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN29",
+    "amt": 2914.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN30",
+    "amt": 3015.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN31",
+    "amt": 3115.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN32",
+    "amt": 3216.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN33",
+    "amt": 3316.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN34",
+    "amt": 3417.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN35",
+    "amt": 3517.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN36",
+    "amt": 3618.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN37",
+    "amt": 3718.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN38",
+    "amt": 3819.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN39",
+    "amt": 3919.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN40",
+    "amt": 4020.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN41",
+    "amt": 4120.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN42",
+    "amt": 4221.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN43",
+    "amt": 4321.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN44",
+    "amt": 4422.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN45",
+    "amt": 4522.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN46",
+    "amt": 4623.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN47",
+    "amt": 4723.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN48",
+    "amt": 4824.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN49",
+    "amt": 4924.5,
+    "type": "DEBIT",
+    "status": "CLEARED"
+  },
+  {
+    "txid": "TXN50",
+    "amt": 5025.0,
+    "type": "CREDIT",
+    "status": "CLEARED"
+  }
+]

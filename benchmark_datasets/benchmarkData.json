@@ -1,0 +1,578 @@
+[
+  {
+    "dataset": "Employee Records (100)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "4202",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "2302",
+      "pct": "-45.2%"
+    },
+    "yaml": {
+      "tokens": "3000",
+      "pct": "-28.6%"
+    },
+    "csv": {
+      "tokens": "1309",
+      "pct": "-68.8%"
+    },
+    "tsv": {
+      "tokens": "1309",
+      "pct": "-68.8%"
+    },
+    "tson": {
+      "tokens": "2000",
+      "pct": "-52.4%"
+    },
+    "xml": {
+      "tokens": "3705",
+      "pct": "-11.8%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "GitHub Repositories (30)",
+    "sub": "uniform-nested-uniform",
+    "pretty_json": {
+      "tokens": "1862",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "932",
+      "pct": "-49.9%"
+    },
+    "yaml": {
+      "tokens": "1290",
+      "pct": "-30.7%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "720",
+      "pct": "-61.3%"
+    },
+    "xml": {
+      "tokens": "1685",
+      "pct": "-9.5%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Time Series Analytics (60)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "2282",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "1323",
+      "pct": "-42.0%"
+    },
+    "yaml": {
+      "tokens": "1680",
+      "pct": "-26.4%"
+    },
+    "csv": {
+      "tokens": "846",
+      "pct": "-62.9%"
+    },
+    "tsv": {
+      "tokens": "786",
+      "pct": "-65.6%"
+    },
+    "tson": {
+      "tokens": "1200",
+      "pct": "-47.4%"
+    },
+    "xml": {
+      "tokens": "2045",
+      "pct": "-10.4%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Contacts + Nested Address (50)",
+    "sub": "uniform-nested-uniform",
+    "pretty_json": {
+      "tokens": "2752",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "1602",
+      "pct": "-41.8%"
+    },
+    "yaml": {
+      "tokens": "1900",
+      "pct": "-31.0%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "1350",
+      "pct": "-50.9%"
+    },
+    "xml": {
+      "tokens": "2355",
+      "pct": "-14.4%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "E-commerce Orders (Nested)",
+    "sub": "nonuniform-nested-nonuniform",
+    "pretty_json": {
+      "tokens": "1173",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "615",
+      "pct": "-47.6%"
+    },
+    "yaml": {
+      "tokens": "804",
+      "pct": "-31.5%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "480",
+      "pct": "-59.1%"
+    },
+    "xml": {
+      "tokens": "1050",
+      "pct": "-10.5%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Deeply Nested Config",
+    "sub": "nonuniform-nested-nonuniform",
+    "pretty_json": {
+      "tokens": "181",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "104",
+      "pct": "-42.5%"
+    },
+    "yaml": {
+      "tokens": "131",
+      "pct": "-27.6%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "87",
+      "pct": "-51.9%"
+    },
+    "xml": {
+      "tokens": "152",
+      "pct": "-16.0%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "User Sessions (80)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "2642",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "1362",
+      "pct": "-48.4%"
+    },
+    "yaml": {
+      "tokens": "1840",
+      "pct": "-30.4%"
+    },
+    "csv": {
+      "tokens": "728",
+      "pct": "-72.4%"
+    },
+    "tsv": {
+      "tokens": "726",
+      "pct": "-72.5%"
+    },
+    "tson": {
+      "tokens": "1120",
+      "pct": "-57.6%"
+    },
+    "xml": {
+      "tokens": "2245",
+      "pct": "-15.0%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Weather API (7 days)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "219",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "129",
+      "pct": "-41.1%"
+    },
+    "yaml": {
+      "tokens": "154",
+      "pct": "-29.7%"
+    },
+    "csv": {
+      "tokens": "82",
+      "pct": "-62.6%"
+    },
+    "tsv": {
+      "tokens": "82",
+      "pct": "-62.6%"
+    },
+    "tson": {
+      "tokens": "112",
+      "pct": "-48.9%"
+    },
+    "xml": {
+      "tokens": "194",
+      "pct": "-11.4%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Product Catalog (40)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "1562",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "922",
+      "pct": "-41.0%"
+    },
+    "yaml": {
+      "tokens": "1160",
+      "pct": "-25.7%"
+    },
+    "csv": {
+      "tokens": "607",
+      "pct": "-61.1%"
+    },
+    "tsv": {
+      "tokens": "606",
+      "pct": "-61.2%"
+    },
+    "tson": {
+      "tokens": "880",
+      "pct": "-43.7%"
+    },
+    "xml": {
+      "tokens": "1405",
+      "pct": "-10.1%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Translation Strings",
+    "sub": "uniform-nested-uniform",
+    "pretty_json": {
+      "tokens": "78",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "44",
+      "pct": "-43.6%"
+    },
+    "yaml": {
+      "tokens": "50",
+      "pct": "-35.9%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "36",
+      "pct": "-53.8%"
+    },
+    "xml": {
+      "tokens": "57",
+      "pct": "-26.9%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Financial Transactions (50)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "1993",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "1194",
+      "pct": "-40.1%"
+    },
+    "yaml": {
+      "tokens": "1491",
+      "pct": "-25.2%"
+    },
+    "csv": {
+      "tokens": "723",
+      "pct": "-63.7%"
+    },
+    "tsv": {
+      "tokens": "723",
+      "pct": "-63.7%"
+    },
+    "tson": {
+      "tokens": "1066",
+      "pct": "-46.5%"
+    },
+    "xml": {
+      "tokens": "1821",
+      "pct": "-8.6%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Sensor Telemetry (100)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "4218",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "2618",
+      "pct": "-37.9%"
+    },
+    "yaml": {
+      "tokens": "3416",
+      "pct": "-19.0%"
+    },
+    "csv": {
+      "tokens": "1821",
+      "pct": "-56.8%"
+    },
+    "tsv": {
+      "tokens": "1821",
+      "pct": "-56.8%"
+    },
+    "tson": {
+      "tokens": "2416",
+      "pct": "-42.7%"
+    },
+    "xml": {
+      "tokens": "3821",
+      "pct": "-9.4%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Chat Messages (30)",
+    "sub": "uniform-flat",
+    "pretty_json": {
+      "tokens": "932",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "543",
+      "pct": "-41.7%"
+    },
+    "yaml": {
+      "tokens": "660",
+      "pct": "-29.2%"
+    },
+    "csv": {
+      "tokens": "336",
+      "pct": "-63.9%"
+    },
+    "tsv": {
+      "tokens": "276",
+      "pct": "-70.4%"
+    },
+    "tson": {
+      "tokens": "480",
+      "pct": "-48.5%"
+    },
+    "xml": {
+      "tokens": "815",
+      "pct": "-12.6%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Vector Embeddings (10)",
+    "sub": "uniform-nested-uniform",
+    "pretty_json": {
+      "tokens": "562",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "352",
+      "pct": "-37.4%"
+    },
+    "yaml": {
+      "tokens": "510",
+      "pct": "-9.3%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "340",
+      "pct": "-39.5%"
+    },
+    "xml": {
+      "tokens": "625",
+      "pct": "+11.2%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "GeoJSON Points (5)",
+    "sub": "uniform-nested-uniform",
+    "pretty_json": {
+      "tokens": "217",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "94",
+      "pct": "-56.7%"
+    },
+    "yaml": {
+      "tokens": "137",
+      "pct": "-36.9%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "71",
+      "pct": "-67.3%"
+    },
+    "xml": {
+      "tokens": "196",
+      "pct": "-9.7%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  },
+  {
+    "dataset": "Server Health Check",
+    "sub": "uniform-nested-nonuniform",
+    "pretty_json": {
+      "tokens": "45",
+      "pct": "baseline"
+    },
+    "json": {
+      "tokens": "24",
+      "pct": "-46.7%"
+    },
+    "yaml": {
+      "tokens": "27",
+      "pct": "-40.0%"
+    },
+    "csv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tsv": {
+      "tokens": "N/A",
+      "pct": ""
+    },
+    "tson": {
+      "tokens": "20",
+      "pct": "-55.6%"
+    },
+    "xml": {
+      "tokens": "40",
+      "pct": "-11.1%"
+    },
+    "slim": {
+      "tokens": "N/A",
+      "pct": ""
+    }
+  }
+]
